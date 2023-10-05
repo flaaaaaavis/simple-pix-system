@@ -2,15 +2,8 @@ package model
 
 import (
 	"github.com/shopspring/decimal"
-	"time"
+	"projeto.com/src/user/model"
 )
-
-type BankAccount struct {
-	BankCode   string
-	BankName   string
-	BankBranch string
-	Account    string
-}
 
 type PixType string
 
@@ -25,37 +18,14 @@ const (
 )
 
 type PixCode struct {
-	Type PixType
-	Code string
-}
-
-type Pix struct {
-	ID          string
-	BankAccount BankAccount
-	PixCodes    []PixCode
-}
-
-type TransactionType string
-
-const (
-	TransactionTypeCharge TransactionType = "CHARGE"
-
-	TransactionTypePayment TransactionType = "PAYMENT"
-
-	/* TransactionTypeRefund TransactionType = "REFUND" */
-)
-
-type Transaction struct {
-	Type      TransactionType
-	Date      time.Time
-	Status    string
-	Amount    decimal.Decimal
-	Sender    BankAccount
-	Recipient BankAccount
+	Type PixType `json:"type"`
+	Code string  `json:"code"`
 }
 
 type Account struct {
-	BankAccount BankAccount
-	Balance     decimal.Decimal
-	Statement   []Transaction
+	User        model.User      `json:"user"`
+	BankAccount BankAccount     `json:"bank_account"`
+	PixCodes    []PixCode       `json:"pix_codes"`
+	Balance     decimal.Decimal `json:"balance"`
+	Statement   []Transaction   `json:"statement"`
 }

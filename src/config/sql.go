@@ -1,10 +1,9 @@
-package repository
+package config
 
 import (
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"projeto.com/src/config"
 )
 
 type Gorm interface {
@@ -21,7 +20,7 @@ func (c *GormConnection) Db() *gorm.DB {
 
 var GlobalConfig *GormConnection
 
-func (c *GormConnection) Connection(config config.DatabaseConfig) error {
+func (c *GormConnection) Connection(config DatabaseConfig) error {
 	dns := fmt.Sprintf("Host=%s Port=%s User=%s Pass=%s DbName=%s SSLMode=disable", config.Host, config.Port, config.User, config.Password, config.DbName)
 
 	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
@@ -38,7 +37,7 @@ func (c *GormConnection) Connection(config config.DatabaseConfig) error {
 	return nil
 }
 
-func NewConnection(dbData config.DatabaseConfig) (*GormConnection, error) {
+func NewConnection(dbData DatabaseConfig) (*GormConnection, error) {
 	if GlobalConfig == nil {
 		GlobalConfig = &GormConnection{}
 		err := GlobalConfig.Connection(dbData)

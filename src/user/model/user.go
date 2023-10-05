@@ -1,13 +1,14 @@
 package model
 
 type Contact struct {
-	Phone string
-	Email string
+	PhoneNumber string `json:"phone_number"`
+	Email       string `json:"email"`
 }
 
 type User struct {
-	ID         string
-	FullName   string
-	SocialName string
-	Contact    Contact
+	ID         string  `json:"id"`
+	FullName   string  `json:"full_name"`
+	SocialName string  `json:"social_name"`
+	CPF        string  `json:"cpf"`
+	Contact    Contact `json:"contact"`
 }
