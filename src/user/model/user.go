@@ -1,14 +1,12 @@
 package model
 
-type Contact struct {
-	PhoneNumber string `json:"phone_number"`
-	Email       string `json:"email"`
-}
+import "gorm.io/gorm"
 
 type User struct {
-	ID         string  `json:"id"`
-	FullName   string  `json:"full_name"`
-	SocialName string  `json:"social_name"`
-	CPF        string  `json:"cpf"`
-	Contact    Contact `json:"contact"`
+	gorm.Model
+	ID         string  `gorm:"primaryKey;type:varchar(255);column:id"`
+	FullName   string  `gorm:"type: varchar(255); column:full_name"`
+	SocialName string  `gorm:"type: varchar(255); column:social_name"`
+	CPF        string  `gorm:"type: varchar(255); column:cpf"`
+	Contact    Contact `gorm:"foreignKey:ID"`
 }
