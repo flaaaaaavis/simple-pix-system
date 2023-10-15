@@ -1,16 +1,10 @@
 package model
 
 import (
-	"github.com/shopspring/decimal"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 	"time"
 )
-
-type BankAccount struct {
-	BankCode   string
-	BankName   string
-	BankBranch string
-	Account    string
-}
 
 type PixType string
 
@@ -24,15 +18,20 @@ const (
 	PixTypeRandom PixType = "RANDOM"
 )
 
-type PixCode struct {
-	Type PixType
-	Code string
-}
-
-type Pix struct {
-	ID          string
-	BankAccount BankAccount
-	PixCodes    []PixCode
+type BankAccount struct {
+	gorm.Model
+	ID           uuid.UUID `gorm:"primarykey;type:uuid;default:gen_random_uuid()"`
+	BankCode     string    `json:"bank_code,omitempty"`
+	BankName     string    `json:"bank_name,omitempty"`
+	BankBranch   string    `json:"bank_branch,omitempty"`
+	Account      string    `json:"account,omitempty"`
+	Code         string    `json:"code,omitempty"`
+	Type         string    `json:"type,omitempty"`
+	Date         time.Time `gorm:"type:date"`
+	Status       string    `json:"status,omitempty"`
+	Amount       int       `json:"amount,omitempty"`
+	Balance      int       `json:"balance,omitempty"`
+	Transactions string    `json:"transactions,omitempty"`
 }
 
 type TransactionType string
@@ -45,17 +44,8 @@ const (
 	/* TransactionTypeRefund TransactionType = "REFUND" */
 )
 
-type Transaction struct {
-	Type      TransactionType
-	Date      time.Time
-	Status    string
-	Amount    decimal.Decimal
-	Sender    BankAccount
-	Recipient BankAccount
-}
-
 type Account struct {
-	BankAccount BankAccount
-	Balance     decimal.Decimal
-	Statement   []Transaction
+	gorm.Model
+	ID          int         `gorm:"primarykey;type:int:;default:gen_random_uuid()"`
+	BankAccount BankAccount `gorm:"foreignKey:ID;references:ID" `
 }

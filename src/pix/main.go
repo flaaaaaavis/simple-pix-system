@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"projeto.com/src/config"
-	"projeto.com/src/pix/repository"
+	"projeto.com/src/repository"
 )
 
 // consumir o NewConnection e subir o DB no docker compose
