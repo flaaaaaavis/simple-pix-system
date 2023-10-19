@@ -6,30 +6,10 @@ import (
 	"projeto.com/src/user/model"
 )
 
-type PixType string
-
-const (
-	PixTypeEmail PixType = "EMAIL"
-
-	PixTypePhone PixType = "PHONE"
-
-	PixTypeCPF PixType = "CPF"
-
-	PixTypeRandom PixType = "RANDOM"
-)
-
-type PixCode struct {
-	ID   uint    `json:"id" gorm:"foreignKey:PixCodeID"`
-	Type PixType `json:"type"`
-	Code string  `json:"code"`
-}
-
-type Account struct {
+type Pix struct {
 	gorm.Model
-	ID            uint            `json:"id" gorm:"primaryKey"`
-	User          model.User      `json:"user"`
-	BankAccountID uint            `json:"bank_account"`
-	PixCodeID     []uint          `json:"pix_codes"`
-	Balance       decimal.Decimal `json:"balance"`
-	Statement     []Transaction   `json:"statement"`
+	ID          string          `gorm:"primaryKey;type:varchar(255);column:id"`
+	User        model.User      `gorm:"type:varchar(255);column:user"`
+	BankAccount BankAccount     `gorm:"type:varchar(255);column:bank_account"`
+	Balance     decimal.Decimal `gorm:"type:varchar(255);column:balance"`
 }

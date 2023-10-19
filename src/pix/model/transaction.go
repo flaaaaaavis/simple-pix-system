@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/shopspring/decimal"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -24,9 +25,11 @@ const (
 )
 
 type Transaction struct {
-	Type     TransactionType    `json:"type"`
-	Date     time.Time          `json:"date"`
-	Amount   decimal.Decimal    `json:"amount"`
-	Accounts map[string]Account `json:"sender"`
-	Status   TransactionStatus  `json:"status"`
+	gorm.Model
+	ID       string            `gorm:"primaryKey;type:varchar(255);column:id"`
+	Type     TransactionType   `gorm:"column:type"`
+	Date     time.Time         `gorm:"type:date;column:date"`
+	Amount   decimal.Decimal   `gorm:"type:decimal(15,2); column:amount"`
+	Accounts map[string]Pix    `gorm:"type:varchar(255)[];column:sender"`
+	Status   TransactionStatus `gorm:"type:varchar(20);default:'pending';column:status"`
 }

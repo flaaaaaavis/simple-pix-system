@@ -5,8 +5,6 @@ import (
 	"projeto.com/src/config"
 )
 
-// consumir o NewConnection e subir o DB no docker compose
-
 func main() {
 	cfg := config.NewConfig()
 
