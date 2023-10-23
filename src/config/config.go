@@ -3,8 +3,8 @@ package config
 const (
 	Host     = "localhost"
 	Port     = "5432"
-	User     = "root"
-	Password = "password"
+	User     = "postgres"
+	Password = "1234"
 	DbName   = "postgres"
 )
 
