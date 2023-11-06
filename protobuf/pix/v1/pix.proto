@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package mentoria.pix;
+
+
+message BankAccount {
+  string id = 1;
+}
+
+message Pix {
+  string id = 1;
+  string user_id = 2;
+  string bank_account_id = 3;
+  string balace = 4;
+}
+
+enum PixType {
+  EMAIL = 0;
+  PHONE = 1;
+  CPF = 2;
+  RANDOM = 3;
+}
+
+message PixCode {
+  string id = 1;
+  string pix_id = 2;
+  string type = 3;
+  string code = 4;
+}
+
+enum TransactionType {
+  PAYMENT = 0;
+  REFUND = 1;
+}
+
+enum TransactionStatus {
+  PENDING = 0;
+  DONE = 1;
+}
+
+message Transaction {
+  string id = 1;
+  TransactionType type = 2;
+  string date = 3;
+  string amount = 4;
+  string sender_id = 5;
+  string receiver_id = 6;
+  TransactionStatus status = 7;
+}

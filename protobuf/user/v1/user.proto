@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package mentoria.user;
+
+message Contact {
+  string id = 1;
+  string email = 2;
+  string phone_number = 3;
+}
+
+message User {
+  string id = 1;
+  string full_name = 2;
+  string social_name = 3;
+  string cpf = 4;
+  string contact_id = 5;
+}
+
+

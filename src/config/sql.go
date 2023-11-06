@@ -11,28 +11,14 @@ import (
 	"time"
 )
 
-type Gorm interface {
-	Db() *gorm.DB
-}
-
-type GormConnection struct {
-	Gorm *gorm.DB
-}
-
-func (c *GormConnection) Db() *gorm.DB {
-	return c.Gorm
-}
-
-var GlobalConfig *GormConnection
-
-func (c *GormConnection) Connection(config DatabaseConfig) error {
+func Connection(config DatabaseConfig) (*gorm.DB, error) {
 	dns := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", config.Host, config.Port, config.User, config.Password, config.DbName)
 
 	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
 
 	if err != nil {
 		fmt.Errorf("erro ao abrir a configuração do GORM: %s", err)
-		return err
+		return nil, err
 	}
 
 	db.AutoMigrate(&userModel.Contact{}, &userModel.User{}, &pixModel.BankAccount{}, &pixModel.PixCode{}, &pixModel.Pix{}, &pixModel.Transaction{})
@@ -129,24 +115,5 @@ func (c *GormConnection) Connection(config DatabaseConfig) error {
 		ReceiverID: pixId2,
 		Status:     pixModel.TransactionStatusPending,
 	})
-
-	print("%v", userId)
-
-	c.Gorm = db
-
-	return nil
-}
-
-func NewConnection(dbData DatabaseConfig) (*GormConnection, error) {
-	if GlobalConfig == nil {
-		GlobalConfig = &GormConnection{}
-		err := GlobalConfig.Connection(dbData)
-
-		if err != nil {
-			fmt.Errorf("erro ao criar nova conexão com o GORM: %s", err)
-			return nil, err
-		}
-	}
-
-	return GlobalConfig, nil
+	return db, nil
 }
