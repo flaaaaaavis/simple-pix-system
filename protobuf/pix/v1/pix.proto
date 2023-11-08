@@ -1,10 +1,16 @@
 syntax = "proto3";
 
-package mentoria.pix;
+package mentoria.pix.v1;
+
+option go_package = "mentoria/pix/v1;pb";
 
 
 message BankAccount {
   string id = 1;
+  string bank_code = 2;
+  string bank_name = 3;
+  string bank_branch = 4;
+  string account_number = 5;
 }
 
 message Pix {

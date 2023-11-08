@@ -1,25 +1,21 @@
-package service
+package repository
 
 import (
-	"fmt"
+	"projeto.com/src/config"
 	"projeto.com/src/pix/model"
-	userModel "projeto.com/src/user/model"
 )
 
-func createTransaction() model.Transaction {
+type TransactionRepository struct {
+	gormConnection config.Gorm
+}
+
+func CreateTransaction() model.Transaction {
 	return model.Transaction{}
 }
 
-func listUserTransactions(user userModel.User) []model.Transaction {
-	fmt.Sprint(user.ID)
+func ListUserTransactionsById(id string) []model.Transaction {
 
 	return []model.Transaction{}
-}
-
-func getUserTransactions(user userModel.User) model.Transaction {
-	fmt.Sprint(user.ID)
-
-	return model.Transaction{}
 }
 
 func updateTransaction() model.Transaction {

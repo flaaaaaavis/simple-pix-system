@@ -9,5 +9,5 @@ type BankAccount struct {
 	BankCode      string `json:"bank_code"`
 	BankName      string `json:"bank_name"`
 	BankBranch    string `json:"bank_branch"`
-	AccountNumber string `json:"account"`
+	AccountNumber string `json:"account_number"`
 }

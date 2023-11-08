@@ -8,12 +8,3 @@ type Contact struct {
 	PhoneNumber string `gorm:"type:varchar(255);column:phone_number"`
 	Email       string `gorm:"type:varchar(255);column:email"`
 }
-
-/*func toStruct(gorm *gorm.DB) Contact {
-	result :=
-	return Contact{
-		ID:          data["id"],
-		PhoneNumber: "",
-		Email:       "",
-	}
-}*/

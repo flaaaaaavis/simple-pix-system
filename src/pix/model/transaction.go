@@ -25,7 +25,7 @@ const (
 type Transaction struct {
 	gorm.Model
 	ID         string            `gorm:"primaryKey;type:varchar(255);column:id"`
-	Type       TransactionType   `gorm:"column:type"`
+	Type       TransactionType   `gorm:"type:varchar(255);column:type"`
 	Date       time.Time         `gorm:"type:date;column:date"`
 	Amount     decimal.Decimal   `gorm:"type:decimal(15,2); column:amount"`
 	SenderID   string            `gorm:"type:varchar(255);column:sender_id"`

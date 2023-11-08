@@ -1,6 +1,9 @@
 syntax = "proto3";
 
-package mentoria.user;
+package mentoria.user.v1;
+
+option go_package = "mentoria/user/v1;pb";
+
 
 message Contact {
   string id = 1;
