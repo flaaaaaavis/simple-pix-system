@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"projeto.com/src/user/model"
+	"projeto.com/src/user/service"
 )
 
 type userRepository struct {
@@ -71,4 +72,10 @@ func (u userRepository) UpdateUserById(newUser *model.User) (*model.User, error)
 	}
 
 	return newUser, nil
+}
+
+func NewUser(db *gorm.DB) service.UserRepo {
+	return &userRepository{
+		gormConnection: db,
+	}
 }

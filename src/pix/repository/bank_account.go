@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"projeto.com/src/pix/model"
+	"projeto.com/src/pix/service"
 )
 
 type bankAccountRepository struct {
 	gormConnection *gorm.DB
 }
 
-func (b *bankAccountRepository) CreateBankAccount(newBankAccount *model.BankAccount) (*model.BankAccount, error) {
+func (b bankAccountRepository) CreateBankAccount(newBankAccount *model.BankAccount) (*model.BankAccount, error) {
 	err := b.gormConnection.Create(newBankAccount)
 	if err.Error != nil {
 		fmt.Sprintf("Error when creating new bank account: %v", err.Error)
@@ -22,7 +23,7 @@ func (b *bankAccountRepository) CreateBankAccount(newBankAccount *model.BankAcco
 	return newBankAccount, nil
 }
 
-func (b *bankAccountRepository) GetBankAccountById(id string) (*model.BankAccount, error) {
+func (b bankAccountRepository) GetBankAccountById(id string) (*model.BankAccount, error) {
 	bankAccount := &model.BankAccount{}
 	condition := fmt.Sprintf("id=%v", id)
 
@@ -48,4 +49,10 @@ func (b *bankAccountRepository) GetBankAccountById(id string) (*model.BankAccoun
 	}
 
 	return bankAccount, nil
+}
+
+func NewBankAccount(db *gorm.DB) service.BankAccountRepo {
+	return &bankAccountRepository{
+		gormConnection: db,
+	}
 }

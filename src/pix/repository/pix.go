@@ -3,28 +3,17 @@ package repository
 import (
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"projeto.com/src/pix/model"
+	"projeto.com/src/pix/service"
 )
 
-type PixRepository struct {
+type pixRepository struct {
 	gormConnection *gorm.DB
 }
 
-func (p *PixRepository) CreatePix(pix *model.Pix) (*model.Pix, error) {
-	db := p.gormConnection.Db()
-
-	id := uuid.New().String()
-
-	newPix := &model.Pix{
-		ID:            id,
-		UserID:        pix.UserID,
-		BankAccountID: pix.BankAccountID,
-		Balance:       pix.Balance,
-	}
-
-	err := db.Create(newPix)
+func (p pixRepository) CreatePix(newPix *model.Pix) (*model.Pix, error) {
+	err := p.gormConnection.Create(newPix)
 	if err.Error != nil {
 		fmt.Sprintf("Error when creating new pix: %v", err.Error)
 
@@ -34,14 +23,11 @@ func (p *PixRepository) CreatePix(pix *model.Pix) (*model.Pix, error) {
 	return newPix, nil
 }
 
-func (p *PixRepository) GetPixById(id string) (*model.Pix, error) {
-	db := p.gormConnection.Db()
-
+func (p pixRepository) GetPixById(id string) (*model.Pix, error) {
 	Pix := &model.Pix{}
-
 	condition := fmt.Sprintf("id=%v", id)
 
-	result := db.First(model.Pix{}, condition)
+	result := p.gormConnection.First(model.Pix{}, condition)
 	if result.Error != nil {
 		fmt.Sprintf("Error when getting Pix from id: %v", result.Error)
 
@@ -65,19 +51,19 @@ func (p *PixRepository) GetPixById(id string) (*model.Pix, error) {
 	return Pix, nil
 }
 
-func (p *PixRepository) UpdatePixBalance(newPix *model.Pix) (*model.Pix, error) {
-	db := p.gormConnection.Db()
-
-	pix := &model.Pix{
-		Balance: newPix.Balance,
-	}
-
-	err := db.Model(pix).Where("id IN (?)", newPix.ID).Updates(pix)
+func (p pixRepository) UpdatePixBalance(newPix *model.Pix) (*model.Pix, error) {
+	err := p.gormConnection.Model(newPix).Where("id IN (?)", newPix.ID).Updates(newPix)
 	if err.Error != nil {
 		fmt.Sprintf("Error when updating contact: %v", err.Error)
 
 		return nil, err.Error
 	}
 
-	return pix, nil
+	return newPix, nil
+}
+
+func NewPix(db *gorm.DB) service.PixRepo {
+	return &pixRepository{
+		gormConnection: db,
+	}
 }

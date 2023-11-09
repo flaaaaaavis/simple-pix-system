@@ -23,4 +23,7 @@ type PixCodeRepo interface {
 }
 
 type TransactionRepo interface {
+	CreateTransaction(newTransaction *model.Transaction) (*model.Transaction, error)
+	ListUserTransactionsById(id string) ([]model.Transaction, error)
+	UpdateTransactionById(transaction *model.Transaction) (*model.Transaction, error)
 }
