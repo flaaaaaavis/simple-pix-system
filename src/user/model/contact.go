@@ -1,10 +1,11 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"github.com/google/uuid"
+)
 
 type Contact struct {
-	gorm.Model
-	ID          string `gorm:"primaryKey;type:varchar(255);column:id"`
-	PhoneNumber string `gorm:"type:varchar(255);column:phone_number"`
-	Email       string `gorm:"type:varchar(255);column:email"`
+	ID          uuid.UUID `gorm:"primarykey;type:uuid;default:gen_random_uuid()"`
+	PhoneNumber string    `gorm:"type:varchar(255);column:phone_number"`
+	Email       string    `gorm:"type:varchar(255);column:email"`
 }

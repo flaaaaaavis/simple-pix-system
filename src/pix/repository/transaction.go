@@ -1,16 +1,16 @@
 package repository
 
 import (
-	"projeto.com/src/config"
+	"gorm.io/gorm"
 	"projeto.com/src/pix/model"
 )
 
 type TransactionRepository struct {
-	gormConnection config.Gorm
+	gormConnection *gorm.DB
 }
 
-func CreateTransaction() model.Transaction {
-	return model.Transaction{}
+func CreateTransaction(newTransaction *model.Transaction) (*model.Transaction, error) {
+	return &model.Transaction{}, nil
 }
 
 func ListUserTransactionsById(id string) []model.Transaction {
@@ -18,6 +18,6 @@ func ListUserTransactionsById(id string) []model.Transaction {
 	return []model.Transaction{}
 }
 
-func updateTransaction() model.Transaction {
+func UpdateTransaction() model.Transaction {
 	return model.Transaction{}
 }

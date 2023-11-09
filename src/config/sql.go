@@ -23,21 +23,21 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 
 	db.AutoMigrate(&userModel.Contact{}, &userModel.User{}, &pixModel.BankAccount{}, &pixModel.PixCode{}, &pixModel.Pix{}, &pixModel.Transaction{})
 
-	contactId := uuid.New().String()
+	contactId := uuid.New()
 	db.Create(&userModel.Contact{
 		ID:          contactId,
 		PhoneNumber: "(12)12345-6789",
 		Email:       "email@email.com",
 	})
 
-	contactId2 := uuid.New().String()
+	contactId2 := uuid.New()
 	db.Create(&userModel.Contact{
 		ID:          contactId2,
 		PhoneNumber: "(12)12345-6787",
 		Email:       "email2@email.com",
 	})
 
-	userId := uuid.New().String()
+	userId := uuid.New()
 	db.Create(&userModel.User{
 		ID:         userId,
 		FullName:   "FullName",
@@ -46,7 +46,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 		ContactID:  contactId,
 	})
 
-	userId2 := uuid.New().String()
+	userId2 := uuid.New()
 	db.Create(&userModel.User{
 		ID:         userId2,
 		FullName:   "FullName2",
@@ -55,7 +55,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 		ContactID:  contactId2,
 	})
 
-	bankAccountId := uuid.New().String()
+	bankAccountId := uuid.New()
 	db.Create(&pixModel.BankAccount{
 		ID:            bankAccountId,
 		BankCode:      "001",
@@ -64,7 +64,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 		AccountNumber: "1138233-3",
 	})
 
-	bankAccountId2 := uuid.New().String()
+	bankAccountId2 := uuid.New()
 	db.Create(&pixModel.BankAccount{
 		ID:            bankAccountId2,
 		BankCode:      "001",
@@ -73,7 +73,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 		AccountNumber: "1138273-3",
 	})
 
-	pixId := uuid.New().String()
+	pixId := uuid.New()
 	db.Create(&pixModel.Pix{
 		ID:            pixId,
 		UserID:        userId,
@@ -81,7 +81,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 		Balance:       decimal.NewFromFloat(7543.28),
 	})
 
-	pixId2 := uuid.New().String()
+	pixId2 := uuid.New()
 	db.Create(&pixModel.Pix{
 		ID:            pixId2,
 		UserID:        userId2,
@@ -89,7 +89,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 		Balance:       decimal.NewFromFloat(7543.28),
 	})
 
-	pixCodeId := uuid.New().String()
+	pixCodeId := uuid.New()
 	db.Create(&pixModel.PixCode{
 		ID:    pixCodeId,
 		PixID: pixId,
@@ -97,7 +97,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 		Code:  "(87)99619-7228",
 	})
 
-	pixCodeId2 := uuid.New().String()
+	pixCodeId2 := uuid.New()
 	db.Create(&pixModel.PixCode{
 		ID:    pixCodeId2,
 		PixID: pixId2,
@@ -105,7 +105,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 		Code:  "(87)99619-7229",
 	})
 
-	transactionId := uuid.New().String()
+	transactionId := uuid.New()
 	db.Create(&pixModel.Transaction{
 		ID:         transactionId,
 		Type:       pixModel.TransactionTypePayment,

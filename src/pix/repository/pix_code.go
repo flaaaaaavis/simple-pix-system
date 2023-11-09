@@ -4,16 +4,16 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	"projeto.com/src/config"
+	"gorm.io/gorm"
 	"projeto.com/src/pix/model"
 )
 
 type PixCodeRepository struct {
-	gormConnection config.Gorm
+	gormConnection *gorm.DB
 }
 
 func (pc *PixCodeRepository) CreatePixCode(pixCode *model.PixCode) (*model.PixCode, error) {
-	db := pc.gormConnection.Db()
+	db := pc.gormConnection
 
 	id := uuid.New().String()
 
@@ -35,7 +35,7 @@ func (pc *PixCodeRepository) CreatePixCode(pixCode *model.PixCode) (*model.PixCo
 }
 
 func (pc *PixCodeRepository) GetPixCodeByPixId(id string) (*model.PixCode, error) {
-	db := pc.gormConnection.Db()
+	db := pc.gormConnection
 
 	PixCode := &model.PixCode{}
 
@@ -66,7 +66,7 @@ func (pc *PixCodeRepository) GetPixCodeByPixId(id string) (*model.PixCode, error
 }
 
 func (pc *PixCodeRepository) GetPixCodeByCode(code string) (*model.PixCode, error) {
-	db := pc.gormConnection.Db()
+	db := pc.gormConnection
 
 	PixCode := &model.PixCode{}
 
@@ -97,7 +97,7 @@ func (pc *PixCodeRepository) GetPixCodeByCode(code string) (*model.PixCode, erro
 }
 
 func (pc *PixCodeRepository) UpdatePixCode(newPixCode model.PixCode) (*model.PixCode, error) {
-	db := pc.gormConnection.Db()
+	db := pc.gormConnection
 
 	pixCode := &model.PixCode{
 		Code: newPixCode.Code,
@@ -114,7 +114,7 @@ func (pc *PixCodeRepository) UpdatePixCode(newPixCode model.PixCode) (*model.Pix
 }
 
 func (pc *PixCodeRepository) DeletePixCode(code string) error {
-	db := pc.gormConnection.Db()
+	db := pc.gormConnection
 
 	PixCode := &model.PixCode{}
 

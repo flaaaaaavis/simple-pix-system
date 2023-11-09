@@ -1,8 +1,8 @@
 package model
 
 import (
+	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
-	"gorm.io/gorm"
 	"time"
 )
 
@@ -23,12 +23,11 @@ const (
 )
 
 type Transaction struct {
-	gorm.Model
-	ID         string            `gorm:"primaryKey;type:varchar(255);column:id"`
+	ID         uuid.UUID         `gorm:"primarykey;type:uuid;default:gen_random_uuid();column:id"`
 	Type       TransactionType   `gorm:"type:varchar(255);column:type"`
 	Date       time.Time         `gorm:"type:date;column:date"`
 	Amount     decimal.Decimal   `gorm:"type:decimal(15,2); column:amount"`
-	SenderID   string            `gorm:"type:varchar(255);column:sender_id"`
-	ReceiverID string            `gorm:"type:varchar(255);column:receiver_id"`
+	SenderID   uuid.UUID         `gorm:"type:uuid;column:sender_id"`
+	ReceiverID uuid.UUID         `gorm:"type:uuid;column:receiver_id"`
 	Status     TransactionStatus `gorm:"type:varchar(20);default:'pending';column:status"`
 }

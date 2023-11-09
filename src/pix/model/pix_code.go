@@ -1,7 +1,7 @@
 package model
 
 import (
-	"gorm.io/gorm"
+	"github.com/google/uuid"
 )
 
 type PixType string
@@ -17,9 +17,8 @@ const (
 )
 
 type PixCode struct {
-	gorm.Model
-	ID    string  `gorm:"primaryKey;type:varchar(255);column:id"`
-	PixID string  `gorm:"type:varchar(255);column:pix_id"`
-	Type  PixType `gorm:"type: varchar(255);column:type"`
-	Code  string  `gorm:"type: varchar(255);column:code"`
+	ID    uuid.UUID `gorm:"primarykey;type:uuid;default:gen_random_uuid();column:id"`
+	PixID uuid.UUID `gorm:"type:uuid;column:pix_id"`
+	Type  PixType   `gorm:"type: varchar(255);column:type"`
+	Code  string    `gorm:"type: varchar(255);column:code"`
 }

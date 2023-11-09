@@ -8,27 +8,32 @@ import (
 	"projeto.com/src/user/model"
 	"testing"
 
-	sqlMock "github.com/DATA-DOG/go-sqlmock"
+	"github.com/DATA-DOG/go-sqlmock"
 )
 
 func TestCreateContact(t *testing.T) {
-	mockUuid := uuid.New().String()
+	mockUuid := uuid.New()
 
 	cases := []struct {
 		name     string
 		req      *model.Contact
-		mockFunc func(sqlMock sqlMock.Sqlmock)
+		mockFunc func(sqlMock sqlmock.Sqlmock)
 		wantErr  error
 		want     *model.Contact
 	}{
 		{
 			name: "Sucess creating new contact",
 			req: &model.Contact{
+				ID:          mockUuid,
 				PhoneNumber: "(87) 98888-8888",
 				Email:       "email@email.com",
 			},
-			mockFunc: func(sqlMock sqlMock.Sqlmock) {
-				sqlMock.ExpectQuery("INSERT INTO").WithArgs("phone_number", "email").WillReturnRows(sqlMock.NewRows([]string{"phone_number", "email"}))
+			mockFunc: func(sqlMock sqlmock.Sqlmock) {
+				sqlMock.ExpectBegin()
+				sqlMock.ExpectQuery("INSERT INTO").
+					WithArgs("(87) 98888-8888", "email@email.com", mockUuid).
+					WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(mockUuid))
+				sqlMock.ExpectCommit()
 			},
 			wantErr: nil,
 			want: &model.Contact{
@@ -41,7 +46,7 @@ func TestCreateContact(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			conn, mockSql, err := sqlMock.New()
+			conn, mockSql, err := sqlmock.New()
 			assert.Nil(t, err)
 			defer conn.Close()
 
@@ -65,11 +70,4 @@ func TestCreateContact(t *testing.T) {
 			assert.Nil(t, mockSql.ExpectationsWereMet())
 		})
 	}
-
-	/*
-		mock
-		assert
-		execute
-	*/
-
 }

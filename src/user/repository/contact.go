@@ -3,35 +3,27 @@ package repository
 import (
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"projeto.com/src/user/model"
+	"projeto.com/src/user/service"
 )
 
-type ContactRepository struct {
+type contactRepository struct {
 	gormConnection *gorm.DB
 }
 
-func (c *ContactRepository) CreateContact(contact *model.Contact) (*model.Contact, error) {
-	id := uuid.New().String()
-
-	newContact := &model.Contact{
-		ID:          id,
-		PhoneNumber: contact.PhoneNumber,
-		Email:       contact.Email,
-	}
-
-	err := c.gormConnection.Create(newContact)
+func (c contactRepository) CreateContact(contact *model.Contact) (*model.Contact, error) {
+	err := c.gormConnection.Create(contact)
 	if err.Error != nil {
 		fmt.Sprintf("Error when creating new contact: %v", err.Error)
 
 		return nil, err.Error
 	}
 
-	return newContact, nil
+	return contact, nil
 }
 
-func (c *ContactRepository) GetContactById(id string) (*model.Contact, error) {
+func (c contactRepository) GetContactById(id string) (*model.Contact, error) {
 	contact := &model.Contact{}
 
 	condition := fmt.Sprintf("id=%v", id)
@@ -60,24 +52,19 @@ func (c *ContactRepository) GetContactById(id string) (*model.Contact, error) {
 	return contact, nil
 }
 
-func (c *ContactRepository) UpdateContactById(newContact *model.Contact) (*model.Contact, error) {
-	contact := &model.Contact{
-		PhoneNumber: newContact.PhoneNumber,
-		Email:       newContact.Email,
-	}
-
-	err := c.gormConnection.Model(contact).Where("id IN (?)", newContact.ID).Updates(contact)
+func (c contactRepository) UpdateContactById(newContact *model.Contact) (*model.Contact, error) {
+	err := c.gormConnection.Model(newContact).Where("id IN (?)", newContact.ID).Updates(newContact)
 	if err.Error != nil {
 		fmt.Sprintf("Error when updating contact: %v", err.Error)
 
 		return nil, err.Error
 	}
 
-	return contact, nil
+	return newContact, nil
 }
 
-func NewContact(db *gorm.DB) *ContactRepository {
-	return &ContactRepository{
+func NewContact(db *gorm.DB) service.ContactRepo {
+	return &contactRepository{
 		gormConnection: db,
 	}
 }

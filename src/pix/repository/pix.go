@@ -4,12 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	"projeto.com/src/config"
+	"gorm.io/gorm"
 	"projeto.com/src/pix/model"
 )
 
 type PixRepository struct {
-	gormConnection config.Gorm
+	gormConnection *gorm.DB
 }
 
 func (p *PixRepository) CreatePix(pix *model.Pix) (*model.Pix, error) {

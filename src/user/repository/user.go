@@ -3,46 +3,30 @@ package repository
 import (
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
-	"projeto.com/src/config"
+	"gorm.io/gorm"
 	"projeto.com/src/user/model"
 )
 
-type UserRepository struct {
-	gormConnection config.Gorm
+type userRepository struct {
+	gormConnection *gorm.DB
 }
 
-func (u *UserRepository) CreateUser(user *model.User) (*model.User, error) {
-	db := u.gormConnection.Db()
-
-	id := uuid.New().String()
-
-	newUser := &model.User{
-		ID:         id,
-		FullName:   user.FullName,
-		SocialName: user.SocialName,
-		CPF:        user.CPF,
-		ContactID:  user.ContactID,
-	}
-
-	err := db.Create(newUser)
+func (u userRepository) CreateUser(user *model.User) (*model.User, error) {
+	err := u.gormConnection.Create(user)
 	if err.Error != nil {
 		fmt.Sprintf("Error when creating new user: %v", err.Error)
 
 		return nil, err.Error
 	}
 
-	return newUser, nil
+	return user, nil
 }
 
-func (u *UserRepository) GetUserById(id string) (*model.User, error) {
-	db := u.gormConnection.Db()
-
+func (u userRepository) GetUserById(id string) (*model.User, error) {
 	user := &model.User{}
-
 	condition := fmt.Sprintf("id=%v", id)
 
-	result := db.First(model.User{}, condition)
+	result := u.gormConnection.First(model.User{}, condition)
 	if result.Error != nil {
 		fmt.Sprintf("Error when getting user: %v", result.Error)
 
@@ -50,14 +34,14 @@ func (u *UserRepository) GetUserById(id string) (*model.User, error) {
 	}
 
 	rows, err := result.Rows()
-	if err.Error != nil {
+	if err != nil {
 		fmt.Sprintf("Error when getting user: %v", err.Error())
 
 		return nil, errors.New(err.Error())
 	}
 
 	err = result.ScanRows(rows, user)
-	if err.Error != nil {
+	if err != nil {
 		fmt.Sprintf("Error when getting user: %v", err.Error())
 
 		return nil, errors.New(err.Error())
@@ -66,26 +50,25 @@ func (u *UserRepository) GetUserById(id string) (*model.User, error) {
 	return user, nil
 }
 
-func (u *UserRepository) ListUsers() ([]*model.User, error) {
-	return nil, nil
-}
+func (u userRepository) ListUsers() ([]*model.User, error) {
+	var users []*model.User
 
-func (u *UserRepository) UpdateUserById(newUser *model.User) (*model.User, error) {
-	db := u.gormConnection.Db()
-
-	user := &model.User{
-		FullName:   newUser.FullName,
-		SocialName: newUser.SocialName,
-		CPF:        newUser.CPF,
-		ContactID:  newUser.ContactID,
+	result := u.gormConnection.Find(&users)
+	if result.Error != nil {
+		fmt.Sprintf("Error when listing users: %s", result.Error)
+		return nil, result.Error
 	}
 
-	err := db.Model(user).Where("id IN (?)", newUser.ID).Updates(user)
+	return users, nil
+}
+
+func (u userRepository) UpdateUserById(newUser *model.User) (*model.User, error) {
+	err := u.gormConnection.Model(newUser).Where("id IN (?)", newUser.ID).Updates(newUser)
 	if err.Error != nil {
 		fmt.Sprintf("Error when updating user: %v", err.Error)
 
 		return nil, err.Error
 	}
 
-	return user, nil
+	return newUser, nil
 }
