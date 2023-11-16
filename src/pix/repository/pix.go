@@ -35,14 +35,14 @@ func (p pixRepository) GetPixById(id string) (*model.Pix, error) {
 	}
 
 	rows, err := result.Rows()
-	if err.Error != nil {
+	if err != nil {
 		fmt.Sprintf("Error when getting Pix: %v", err.Error())
 
 		return nil, errors.New(err.Error())
 	}
 
 	err = result.ScanRows(rows, Pix)
-	if err.Error != nil {
+	if err != nil {
 		fmt.Sprintf("Error when getting Pix: %v", err.Error())
 
 		return nil, errors.New(err.Error())

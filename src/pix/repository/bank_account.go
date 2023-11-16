@@ -35,14 +35,14 @@ func (b bankAccountRepository) GetBankAccountById(id string) (*model.BankAccount
 	}
 
 	rows, err := result.Rows()
-	if err.Error != nil {
+	if err != nil {
 		fmt.Sprintf("Error when getting bankAccount: %v", err.Error())
 
 		return nil, errors.New(err.Error())
 	}
 
 	err = result.ScanRows(rows, bankAccount)
-	if err.Error != nil {
+	if err != nil {
 		fmt.Sprintf("Error when getting bankAccount: %v", err.Error())
 
 		return nil, errors.New(err.Error())

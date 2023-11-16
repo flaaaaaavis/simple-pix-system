@@ -35,14 +35,14 @@ func (pc pixCodeRepository) GetPixCodeByPixId(id string) (*model.PixCode, error)
 	}
 
 	rows, err := result.Rows()
-	if err.Error != nil {
+	if err != nil {
 		fmt.Sprintf("Error when getting PixCode: %v", err.Error())
 
 		return nil, errors.New(err.Error())
 	}
 
 	err = result.ScanRows(rows, PixCode)
-	if err.Error != nil {
+	if err != nil {
 		fmt.Sprintf("Error when getting PixCode: %v", err.Error())
 
 		return nil, errors.New(err.Error())
@@ -64,14 +64,14 @@ func (pc pixCodeRepository) GetPixCodeByCode(code string) (*model.PixCode, error
 	}
 
 	rows, err := result.Rows()
-	if err.Error != nil {
+	if err != nil {
 		fmt.Sprintf("Error when getting PixCode: %v", err.Error())
 
 		return nil, errors.New(err.Error())
 	}
 
 	err = result.ScanRows(rows, PixCode)
-	if err.Error != nil {
+	if err != nil {
 		fmt.Sprintf("Error when getting PixCode: %v", err.Error())
 
 		return nil, errors.New(err.Error())

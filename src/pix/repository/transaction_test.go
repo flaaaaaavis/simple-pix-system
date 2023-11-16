@@ -2,50 +2,59 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"projeto.com/src/user/model"
+	"projeto.com/src/pix/model"
 	"testing"
+	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 )
 
-func TestCreateUser(t *testing.T) {
+func TestCreateTransaction(t *testing.T) {
 	mockUuid := uuid.New()
-	contactId := uuid.New()
+	date := time.Now()
+	senderId := uuid.New()
+	receiverId := uuid.New()
 
 	cases := []struct {
 		name     string
-		req      *model.User
+		req      *model.Transaction
 		mockFunc func(sqlMock sqlmock.Sqlmock)
 		wantErr  error
-		want     *model.User
+		want     *model.Transaction
 	}{
 		{
-			name: "Success creating new user",
-			req: &model.User{
+			name: "Success creating new Transaction",
+			req: &model.Transaction{
 				ID:         mockUuid,
-				FullName:   "FullName",
-				SocialName: "SocialName",
-				CPF:        "CPF",
-				ContactID:  contactId,
+				Type:       model.TransactionTypePayment,
+				Date:       date,
+				Amount:     decimal.NewFromFloat(500.00),
+				SenderID:   senderId,
+				ReceiverID: receiverId,
+				Status:     model.TransactionStatusDone,
 			},
 			mockFunc: func(sqlMock sqlmock.Sqlmock) {
 				sqlMock.ExpectBegin()
 				sqlMock.ExpectQuery("INSERT INTO").
-					WithArgs("FullName", "SocialName", "CPF", contactId, mockUuid).
+					WithArgs(model.TransactionTypePayment, date, decimal.NewFromFloat(500.00), senderId, receiverId, model.TransactionStatusDone, mockUuid).
 					WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(mockUuid))
 				sqlMock.ExpectCommit()
 			},
 			wantErr: nil,
-			want: &model.User{
+			want: &model.Transaction{
 				ID:         mockUuid,
-				FullName:   "FullName",
-				SocialName: "SocialName",
-				CPF:        "CPF",
-				ContactID:  contactId,
+				Type:       model.TransactionTypePayment,
+				Date:       date,
+				Amount:     decimal.NewFromFloat(500.00),
+				SenderID:   senderId,
+				ReceiverID: receiverId,
+				Status:     model.TransactionStatusDone,
 			},
 		},
 	}
@@ -57,7 +66,7 @@ func TestCreateUser(t *testing.T) {
 			defer func(conn *sql.DB) {
 				err := conn.Close()
 				if err != nil {
-
+					fmt.Sprintf("Error closing connection")
 				}
 			}(conn)
 
@@ -71,10 +80,10 @@ func TestCreateUser(t *testing.T) {
 			db, err := gorm.Open(postgresConfig, &gorm.Config{})
 			assert.NoError(t, err)
 
-			d := NewUser(db)
+			d := NewTransaction(db)
 
 			tc.mockFunc(mockSql)
-			response, err := d.CreateUser(tc.req)
+			response, err := d.CreateTransaction(tc.req)
 
 			assert.Equal(t, tc.want, response)
 			assert.Equal(t, tc.wantErr, err)
