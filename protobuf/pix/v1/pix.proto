@@ -17,7 +17,7 @@ message Pix {
   string id = 1;
   string user_id = 2;
   string bank_account_id = 3;
-  string balace = 4;
+  string balance = 4;
 }
 
 enum PixType {

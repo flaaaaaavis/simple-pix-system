@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"gorm.io/gorm"
-	"projeto.com/src/user/model"
-	"projeto.com/src/user/service"
+	"mentoria/src/user/model"
+	"mentoria/src/user/service"
 )
 
 type contactRepository struct {

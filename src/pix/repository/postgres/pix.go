@@ -4,15 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"gorm.io/gorm"
-	"projeto.com/src/pix/model"
-	"projeto.com/src/pix/service"
+	"mentoria/src/pix/model/postgres"
+	"mentoria/src/pix/service"
 )
 
 type pixRepository struct {
 	gormConnection *gorm.DB
 }
 
-func (p pixRepository) CreatePix(newPix *model.Pix) (*model.Pix, error) {
+func (p pixRepository) CreatePix(newPix *postgres.Pix) (*postgres.Pix, error) {
 	err := p.gormConnection.Create(newPix)
 	if err.Error != nil {
 		fmt.Sprintf("Error when creating new pix: %v", err.Error)
@@ -23,11 +23,11 @@ func (p pixRepository) CreatePix(newPix *model.Pix) (*model.Pix, error) {
 	return newPix, nil
 }
 
-func (p pixRepository) GetPixById(id string) (*model.Pix, error) {
-	Pix := &model.Pix{}
+func (p pixRepository) GetPixById(id string) (*postgres.Pix, error) {
+	Pix := &postgres.Pix{}
 	condition := fmt.Sprintf("id=%v", id)
 
-	result := p.gormConnection.First(model.Pix{}, condition)
+	result := p.gormConnection.First(postgres.Pix{}, condition)
 	if result.Error != nil {
 		fmt.Sprintf("Error when getting Pix from id: %v", result.Error)
 
@@ -51,7 +51,7 @@ func (p pixRepository) GetPixById(id string) (*model.Pix, error) {
 	return Pix, nil
 }
 
-func (p pixRepository) UpdatePixBalance(newPix *model.Pix) (*model.Pix, error) {
+func (p pixRepository) UpdatePixBalance(newPix *postgres.Pix) (*postgres.Pix, error) {
 	err := p.gormConnection.Model(newPix).Where("id IN (?)", newPix.ID).Updates(newPix)
 	if err.Error != nil {
 		fmt.Sprintf("Error when updating contact: %v", err.Error)

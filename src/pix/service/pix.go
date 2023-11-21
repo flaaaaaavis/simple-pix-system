@@ -1,29 +1,29 @@
 package service
 
 import (
-	"projeto.com/src/pix/model"
+	"mentoria/src/pix/model/postgres"
 )
 
 type BankAccountRepo interface {
-	CreateBankAccount(account *model.BankAccount) (*model.BankAccount, error)
-	GetBankAccountById(id string) (*model.BankAccount, error)
+	CreateBankAccount(account *postgres.BankAccount) (*postgres.BankAccount, error)
+	GetBankAccountById(id string) (*postgres.BankAccount, error)
 }
 
 type PixRepo interface {
-	CreatePix(pix *model.Pix) (*model.Pix, error)
-	GetPixById(id string) (*model.Pix, error)
-	UpdatePixBalance(newPix *model.Pix) (*model.Pix, error)
+	CreatePix(pix *postgres.Pix) (*postgres.Pix, error)
+	GetPixById(id string) (*postgres.Pix, error)
+	UpdatePixBalance(newPix *postgres.Pix) (*postgres.Pix, error)
 }
 
 type PixCodeRepo interface {
-	CreatePixCode(pixCode *model.PixCode) (*model.PixCode, error)
-	GetPixCodeByPixId(id string) (*model.PixCode, error)
-	GetPixCodeByCode(code string) (*model.PixCode, error)
+	CreatePixCode(pixCode *postgres.PixCode) (*postgres.PixCode, error)
+	GetPixCodeByPixId(id string) (*postgres.PixCode, error)
+	GetPixCodeByCode(code string) (*postgres.PixCode, error)
 	DeletePixCode(code string) error
 }
 
 type TransactionRepo interface {
-	CreateTransaction(newTransaction *model.Transaction) (*model.Transaction, error)
-	ListUserTransactionsById(id string) ([]model.Transaction, error)
-	UpdateTransactionById(transaction *model.Transaction) (*model.Transaction, error)
+	CreateTransaction(newTransaction *postgres.Transaction) (*postgres.Transaction, error)
+	ListUserTransactionsById(id string) ([]postgres.Transaction, error)
+	UpdateTransactionById(transaction *postgres.Transaction) (*postgres.Transaction, error)
 }

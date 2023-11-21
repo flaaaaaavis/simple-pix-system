@@ -1,7 +1,7 @@
 package service
 
 import (
-	"projeto.com/src/user/model"
+	"mentoria/src/user/model"
 )
 
 type UserRepo interface {

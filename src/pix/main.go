@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"projeto.com/src/config"
+	"mentoria/src/config"
 )
 
 func main() {

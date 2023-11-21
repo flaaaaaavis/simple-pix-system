@@ -3,15 +3,15 @@ package repository
 import (
 	"fmt"
 	"gorm.io/gorm"
-	"projeto.com/src/pix/model"
-	"projeto.com/src/pix/service"
+	"mentoria/src/pix/model/postgres"
+	"mentoria/src/pix/service"
 )
 
 type transactionRepository struct {
 	gormConnection *gorm.DB
 }
 
-func (t transactionRepository) CreateTransaction(newTransaction *model.Transaction) (*model.Transaction, error) {
+func (t transactionRepository) CreateTransaction(newTransaction *postgres.Transaction) (*postgres.Transaction, error) {
 	err := t.gormConnection.Create(newTransaction)
 	if err.Error != nil {
 		fmt.Sprintf("Error when creating new transaction: %v", err.Error)
@@ -22,8 +22,8 @@ func (t transactionRepository) CreateTransaction(newTransaction *model.Transacti
 	return newTransaction, nil
 }
 
-func (t transactionRepository) ListUserTransactionsById(id string) ([]model.Transaction, error) {
-	var transactions []model.Transaction
+func (t transactionRepository) ListUserTransactionsById(id string) ([]postgres.Transaction, error) {
+	var transactions []postgres.Transaction
 
 	condition := fmt.Sprintf("sender_id=%v OR receiver_id=%v", id, id)
 
@@ -36,7 +36,7 @@ func (t transactionRepository) ListUserTransactionsById(id string) ([]model.Tran
 	return transactions, nil
 }
 
-func (t transactionRepository) UpdateTransactionById(transaction *model.Transaction) (*model.Transaction, error) {
+func (t transactionRepository) UpdateTransactionById(transaction *postgres.Transaction) (*postgres.Transaction, error) {
 	err := t.gormConnection.Model(transaction).Where("id IN (?)", transaction.ID).Updates(transaction)
 	if err.Error != nil {
 		fmt.Sprintf("Error when updating transaction: %s", err.Error)
