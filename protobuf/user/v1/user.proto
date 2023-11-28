@@ -19,4 +19,26 @@ message User {
   string contact_id = 5;
 }
 
+message GetContactByIdRequest {
+  string id = 1;
+}
+
+message GetUserByIdRequest {
+  string id = 1;
+}
+
+//message ListUsersResponse {
+//  repeated User users = 1;
+//}
+
+service UserService {
+  rpc CreateContact(Contact) returns (Contact){}
+  rpc GetContactById(GetContactByIdRequest) returns (Contact){}
+  rpc UpdateContactById(Contact) returns (Contact){}
+
+  rpc CreateUser(User) returns (User){}
+  rpc GetUserById(GetUserByIdRequest) returns (User){}
+//  rpc ListUsers(User) returns (ListUsersResponse){}
+  rpc UpdateUserById(User) returns (User){}
+}
 

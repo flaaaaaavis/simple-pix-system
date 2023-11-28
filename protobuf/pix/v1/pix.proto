@@ -30,26 +30,14 @@ enum PixType {
 message PixCode {
   string id = 1;
   string pix_id = 2;
-  string type = 3;
+  PixType type = 3;
   string code = 4;
-}
-
-enum TransactionType {
-  PAYMENT = 0;
-  REFUND = 1;
-}
-
-enum TransactionStatus {
-  PENDING = 0;
-  DONE = 1;
 }
 
 message Transaction {
   string id = 1;
-  TransactionType type = 2;
-  string date = 3;
-  string amount = 4;
-  string sender_id = 5;
-  string receiver_id = 6;
-  TransactionStatus status = 7;
+  string date = 2;
+  string amount = 3;
+  string sender_id = 4;
+  string receiver_id = 5;
 }
