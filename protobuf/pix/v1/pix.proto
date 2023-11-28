@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package mentoria.pix.v1;
 
+import "google/protobuf/empty.proto";
+
 option go_package = "mentoria/pix/v1;pb";
 
 
@@ -40,4 +42,27 @@ message Transaction {
   string amount = 3;
   string sender_id = 4;
   string receiver_id = 5;
+}
+
+message ListUserTransactionsByIdResponse {
+  repeated Transaction transactions = 1;
+}
+
+service PixService {
+  rpc CreateBankAccount(BankAccount) returns (BankAccount) {}
+  rpc GetBankAccountById(BankAccount) returns (BankAccount) {}
+
+  rpc CreatePix(Pix) returns (Pix) {}
+  rpc GetPixById(Pix) returns (Pix) {}
+  rpc UpdatePixBalance(Pix) returns (Pix) {}
+
+  rpc CreatePixCode(PixCode) returns (PixCode) {}
+  rpc GetPixCodeByPixId(PixCode) returns (PixCode) {}
+  rpc GetPixCodeByCode(PixCode) returns (PixCode) {}
+  rpc UpdatePixCode(PixCode) returns (PixCode) {}
+  rpc DeletePixCode(PixCode) returns (google.protobuf.Empty) {}
+
+  rpc CreateTransaction(Transaction) returns (Transaction) {}
+  rpc ListUserTransactionsById(Transaction) returns (ListUserTransactionsByIdResponse) {}
+  rpc UpdateTransactionById(Transaction) returns (Transaction) {}
 }

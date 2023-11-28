@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"gorm.io/gorm"
-	"mentoria/src/pix/model/postgres"
+	"mentoria/src/pix/model"
 	"mentoria/src/pix/service"
 )
 
@@ -12,7 +12,7 @@ type bankAccountRepository struct {
 	gormConnection *gorm.DB
 }
 
-func (b bankAccountRepository) CreateBankAccount(newBankAccount *postgres.BankAccount) (*postgres.BankAccount, error) {
+func (b bankAccountRepository) CreateBankAccount(newBankAccount *model.BankAccount) (*model.BankAccount, error) {
 	err := b.gormConnection.Create(newBankAccount)
 	if err.Error != nil {
 		fmt.Sprintf("Error when creating new bank account: %v", err.Error)
@@ -23,11 +23,11 @@ func (b bankAccountRepository) CreateBankAccount(newBankAccount *postgres.BankAc
 	return newBankAccount, nil
 }
 
-func (b bankAccountRepository) GetBankAccountById(id string) (*postgres.BankAccount, error) {
-	bankAccount := &postgres.BankAccount{}
+func (b bankAccountRepository) GetBankAccountById(id string) (*model.BankAccount, error) {
+	bankAccount := &model.BankAccount{}
 	condition := fmt.Sprintf("id=%v", id)
 
-	result := b.gormConnection.First(postgres.BankAccount{}, condition)
+	result := b.gormConnection.First(model.BankAccount{}, condition)
 	if result.Error != nil {
 		fmt.Sprintf("Error when getting BankAccount from id: %v", result.Error)
 

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"gorm.io/gorm"
-	"mentoria/src/pix/model/postgres"
+	"mentoria/src/pix/model"
 	"mentoria/src/pix/service"
 )
 
@@ -12,7 +12,7 @@ type pixCodeRepository struct {
 	gormConnection *gorm.DB
 }
 
-func (pc pixCodeRepository) CreatePixCode(newPixCode *postgres.PixCode) (*postgres.PixCode, error) {
+func (pc pixCodeRepository) CreatePixCode(newPixCode *model.PixCode) (*model.PixCode, error) {
 	err := pc.gormConnection.Create(newPixCode)
 	if err.Error != nil {
 		fmt.Sprintf("Error when creating new pix code: %v", err.Error)
@@ -23,11 +23,11 @@ func (pc pixCodeRepository) CreatePixCode(newPixCode *postgres.PixCode) (*postgr
 	return newPixCode, nil
 }
 
-func (pc pixCodeRepository) GetPixCodeByPixId(id string) (*postgres.PixCode, error) {
-	PixCode := &postgres.PixCode{}
+func (pc pixCodeRepository) GetPixCodeByPixId(id string) (*model.PixCode, error) {
+	PixCode := &model.PixCode{}
 	condition := fmt.Sprintf("pix_id=%v", id)
 
-	result := pc.gormConnection.First(postgres.PixCode{}, condition)
+	result := pc.gormConnection.First(model.PixCode{}, condition)
 	if result.Error != nil {
 		fmt.Sprintf("Error when getting PixCode from pix_id: %v", result.Error)
 
@@ -51,12 +51,12 @@ func (pc pixCodeRepository) GetPixCodeByPixId(id string) (*postgres.PixCode, err
 	return PixCode, nil
 }
 
-func (pc pixCodeRepository) GetPixCodeByCode(code string) (*postgres.PixCode, error) {
-	PixCode := &postgres.PixCode{}
+func (pc pixCodeRepository) GetPixCodeByCode(code string) (*model.PixCode, error) {
+	PixCode := &model.PixCode{}
 
 	condition := fmt.Sprintf("code=%v", code)
 
-	result := pc.gormConnection.First(postgres.PixCode{}, condition)
+	result := pc.gormConnection.First(model.PixCode{}, condition)
 	if result.Error != nil {
 		fmt.Sprintf("Error when getting PixCode from code: %v", result.Error)
 
@@ -80,7 +80,7 @@ func (pc pixCodeRepository) GetPixCodeByCode(code string) (*postgres.PixCode, er
 	return PixCode, nil
 }
 
-func (pc pixCodeRepository) UpdatePixCode(newPixCode postgres.PixCode) (*postgres.PixCode, error) {
+func (pc pixCodeRepository) UpdatePixCode(newPixCode model.PixCode) (*model.PixCode, error) {
 	err := pc.gormConnection.Model(newPixCode).Where("id IN (?)", newPixCode.ID).Updates(newPixCode)
 	if err.Error != nil {
 		fmt.Sprintf("Error when updating contact: %v", err.Error)
@@ -92,7 +92,7 @@ func (pc pixCodeRepository) UpdatePixCode(newPixCode postgres.PixCode) (*postgre
 }
 
 func (pc pixCodeRepository) DeletePixCode(code string) error {
-	PixCode := &postgres.PixCode{}
+	PixCode := &model.PixCode{}
 	condition := fmt.Sprintf("code=%v", code)
 
 	err := pc.gormConnection.Where(condition).Delete(PixCode)

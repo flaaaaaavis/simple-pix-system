@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"gorm.io/gorm"
-	"mentoria/src/user/model"
+	"mentoria/src/user/model/postgres_model"
 	"mentoria/src/user/service"
 )
 
