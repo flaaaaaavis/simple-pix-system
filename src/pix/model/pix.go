@@ -1,4 +1,4 @@
-package postgres
+package model
 
 import (
 	"github.com/google/uuid"

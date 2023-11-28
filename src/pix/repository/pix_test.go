@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"projeto.com/src/pix/model"
+	"mentoria/src/pix/model"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"

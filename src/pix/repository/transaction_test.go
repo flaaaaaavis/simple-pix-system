@@ -4,48 +4,57 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"projeto.com/src/pix/model"
+	"mentoria/src/pix/model"
 	"testing"
+	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 )
 
-func TestCreateBankAccount(t *testing.T) {
+func TestCreateTransaction(t *testing.T) {
 	mockUuid := uuid.New()
+	date := time.Now()
+	senderId := uuid.New()
+	receiverId := uuid.New()
 
 	cases := []struct {
 		name     string
-		req      *model.BankAccount
+		req      *model.Transaction
 		mockFunc func(sqlMock sqlmock.Sqlmock)
 		wantErr  error
-		want     *model.BankAccount
+		want     *model.Transaction
 	}{
 		{
-			name: "Success creating new BankAccount",
-			req: &model.BankAccount{
-				ID:            mockUuid,
-				BankCode:      "BankCode",
-				BankName:      "BankName",
-				BankBranch:    "BankBranch",
-				AccountNumber: "AccountNumber",
+			name: "Success creating new Transaction",
+			req: &model.Transaction{
+				ID:         mockUuid,
+				Type:       model.TransactionTypePayment,
+				Date:       date,
+				Amount:     decimal.NewFromFloat(500.00),
+				SenderID:   senderId,
+				ReceiverID: receiverId,
+				Status:     model.TransactionStatusDone,
 			},
 			mockFunc: func(sqlMock sqlmock.Sqlmock) {
 				sqlMock.ExpectBegin()
 				sqlMock.ExpectQuery("INSERT INTO").
-					WithArgs("BankCode", "BankName", "BankBranch", "AccountNumber", mockUuid).
+					WithArgs(model.TransactionTypePayment, date, decimal.NewFromFloat(500.00), senderId, receiverId, model.TransactionStatusDone, mockUuid).
 					WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(mockUuid))
 				sqlMock.ExpectCommit()
 			},
 			wantErr: nil,
-			want: &model.BankAccount{
-				ID:            mockUuid,
-				BankCode:      "BankCode",
-				BankName:      "BankName",
-				BankBranch:    "BankBranch",
-				AccountNumber: "AccountNumber",
+			want: &model.Transaction{
+				ID:         mockUuid,
+				Type:       model.TransactionTypePayment,
+				Date:       date,
+				Amount:     decimal.NewFromFloat(500.00),
+				SenderID:   senderId,
+				ReceiverID: receiverId,
+				Status:     model.TransactionStatusDone,
 			},
 		},
 	}
@@ -71,10 +80,10 @@ func TestCreateBankAccount(t *testing.T) {
 			db, err := gorm.Open(postgresConfig, &gorm.Config{})
 			assert.NoError(t, err)
 
-			d := NewBankAccount(db)
+			d := NewTransaction(db)
 
 			tc.mockFunc(mockSql)
-			response, err := d.CreateBankAccount(tc.req)
+			response, err := d.CreateTransaction(tc.req)
 
 			assert.Equal(t, tc.want, response)
 			assert.Equal(t, tc.wantErr, err)

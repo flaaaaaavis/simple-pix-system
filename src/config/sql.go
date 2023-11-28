@@ -6,8 +6,8 @@ import (
 	"github.com/shopspring/decimal"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	postgres2 "mentoria/src/pix/model/postgres"
-	userModel "mentoria/src/user/model"
+	"mentoria/src/pix/model"
+	userModel "mentoria/src/user/model/postgres_model"
 	"time"
 )
 
@@ -21,7 +21,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	db.AutoMigrate(&userModel.Contact{}, &userModel.User{}, &postgres2.BankAccount{}, &postgres2.PixCode{}, &postgres2.Pix{}, &postgres2.Transaction{})
+	db.AutoMigrate(&userModel.Contact{}, &userModel.User{}, &model.BankAccount{}, &model.PixCode{}, &model.Pix{}, &model.Transaction{})
 
 	contactId := uuid.New()
 	db.Create(&userModel.Contact{
@@ -56,7 +56,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 	})
 
 	bankAccountId := uuid.New()
-	db.Create(&postgres2.BankAccount{
+	db.Create(&model.BankAccount{
 		ID:            bankAccountId,
 		BankCode:      "001",
 		BankName:      "Banco do Brasil",
@@ -65,7 +65,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 	})
 
 	bankAccountId2 := uuid.New()
-	db.Create(&postgres2.BankAccount{
+	db.Create(&model.BankAccount{
 		ID:            bankAccountId2,
 		BankCode:      "001",
 		BankName:      "Banco do Brasil",
@@ -74,7 +74,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 	})
 
 	pixId := uuid.New()
-	db.Create(&postgres2.Pix{
+	db.Create(&model.Pix{
 		ID:            pixId,
 		UserID:        userId,
 		BankAccountID: bankAccountId,
@@ -82,7 +82,7 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 	})
 
 	pixId2 := uuid.New()
-	db.Create(&postgres2.Pix{
+	db.Create(&model.Pix{
 		ID:            pixId2,
 		UserID:        userId2,
 		BankAccountID: bankAccountId2,
@@ -90,30 +90,30 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 	})
 
 	pixCodeId := uuid.New()
-	db.Create(&postgres2.PixCode{
+	db.Create(&model.PixCode{
 		ID:    pixCodeId,
 		PixID: pixId,
-		Type:  postgres2.PixTypePhone,
+		Type:  model.PixTypePhone,
 		Code:  "(87)99619-7228",
 	})
 
 	pixCodeId2 := uuid.New()
-	db.Create(&postgres2.PixCode{
+	db.Create(&model.PixCode{
 		ID:    pixCodeId2,
 		PixID: pixId2,
-		Type:  postgres2.PixTypePhone,
+		Type:  model.PixTypePhone,
 		Code:  "(87)99619-7229",
 	})
 
 	transactionId := uuid.New()
-	db.Create(&postgres2.Transaction{
+	db.Create(&model.Transaction{
 		ID:         transactionId,
-		Type:       postgres2.TransactionTypePayment,
+		Type:       model.TransactionTypePayment,
 		Date:       time.Now(),
 		Amount:     decimal.NewFromFloat(500.00),
 		SenderID:   pixId,
 		ReceiverID: pixId2,
-		Status:     postgres2.TransactionStatusPending,
+		Status:     model.TransactionStatusPending,
 	})
 	return db, nil
 }

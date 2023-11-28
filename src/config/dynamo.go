@@ -2,35 +2,44 @@ package config
 
 import (
 	"context"
-	"fmt"
-	awsConfig "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+
+	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
-var dynamoConnect *dynamodb.Client
-
-func connection() error {
-	cfg, err := awsConfig.LoadDefaultConfig(context.TODO())
+func CreateTables(dynamoConf DynamoConfig) (*dynamodb.Client, error) {
+	ctx := context.TODO()
+	cfg, err := config.LoadDefaultConfig(ctx, func(opts *config.LoadOptions) error {
+		opts.Region = dynamoConf.Region
+		return nil
+	})
 	if err != nil {
-		fmt.Sprintf("Error loading aws default config: %s", err)
-		return err
+		panic(err)
+		return nil, err
 	}
 
-	dynamoConnect = dynamodb.NewFromConfig(cfg)
+	svc := dynamodb.NewFromConfig(cfg, func(db *dynamodb.Options) {
+		db.EndpointResolver = dynamodb.EndpointResolverFromURL("http://localhost:8000")
+	})
 
-	return nil
-}
+	_, err = svc.CreateTable(ctx, &dynamodb.CreateTableInput{
+		AttributeDefinitions: []types.AttributeDefinition{
+			{
+				AttributeName: aws.String("id"),
+				AttributeType: types.ScalarAttributeTypeS,
+			},
+		},
+		KeySchema: []types.KeySchemaElement{
+			{
+				AttributeName: aws.String("id"),
+				KeyType:       types.KeyTypeHash,
+			},
+		},
+		TableName:   aws.String(dynamoConf.TableName),
+		BillingMode: types.BillingModePayPerRequest,
+	})
 
-func NewDynamoDatabase() (*dynamodb.Client, error) {
-	if dynamoConnect == nil {
-		err := connection()
-		if err != nil {
-			fmt.Sprintf("Error when creating new dynamo connection: %s", err)
-			return nil, err
-		}
-
-		return dynamoConnect, nil
-	}
-
-	return dynamoConnect, nil
+	return svc, nil
 }

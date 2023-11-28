@@ -3,58 +3,27 @@ package dynamo_repo
 import (
 	"context"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"log"
+	"mentoria/src/config"
+	model "mentoria/src/user/model/dynamo_model"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	"log"
-	"mentoria/src/config/common"
-	"mentoria/src/user/model/dynamo_model"
 )
 
-type DynamoClient struct {
+type ClientDynamo struct {
+	Client    dynamodb.Client
 	TableName string
-	Client    common.DynamoDBAPI
 }
 
-const (
-	PKFormat = "Pk#%s"
-	SKFormat = "Sk#%s"
-)
+func (d *ClientDynamo) CreateItem(ctx context.Context, user model.User) error {
 
-func (d *DynamoClient) GetUser(ctx context.Context, user *dynamo_model.User) (*dynamo_model.User, error) {
-	dbUser := &dynamo_model.User{}
-
-	selectedKeys := map[string]string{
-		"PK": fmt.Sprintf(PKFormat, user.ID),
-		"SK": fmt.Sprintf(SKFormat, user.ID),
-	}
-
-	key, err := attributevalue.MarshalMap(selectedKeys)
-	if err != nil {
-		log.Fatalf("Error on MarshalMap of the selected keys: %v\n", err)
-		return nil, err
-	}
-
-	res := &dynamodb.GetItemInput{
-		Key:       key,
-		TableName: aws.String(d.TableName),
-	}
-
-	item, err := d.Client.GetItem(ctx, res)
-	if err != nil {
-		log.Fatalf("Error getting item from dynamo: %v\n", err)
-		return nil, err
-	}
-
-	err = attributevalue.UnmarshalMap(item.Item, dbUser)
-
-	return dbUser, nil
-}
-
-func (d *DynamoClient) CreateItem(ctx context.Context, user *dynamo_model.User) error {
 	item, err := attributevalue.MarshalMap(user)
+
 	if err != nil {
-		log.Fatalf("Error converting user to Dynamo Type: %v\n", err)
+		log.Fatalf("Couldn't add item to table. Here's why: %v\n", err)
 		return err
 	}
 
@@ -64,10 +33,39 @@ func (d *DynamoClient) CreateItem(ctx context.Context, user *dynamo_model.User) 
 	}
 
 	_, err = d.Client.PutItem(ctx, input)
-	if err != nil {
-		log.Fatalf("Error sending item to dynamo: %v\n", err)
-		return err
-	}
 
 	return nil
+
+}
+
+func (d *ClientDynamo) GetUser(ctx context.Context, user *model.User) (*model.User, error) {
+	var u *model.User
+
+	input := dynamodb.GetItemInput{
+		Key: map[string]types.AttributeValue{
+			"ID": &types.AttributeValueMemberS{
+				Value: fmt.Sprint(user.ID),
+			},
+		},
+		TableName: aws.String(d.TableName),
+	}
+
+	res, err := d.Client.GetItem(ctx, &input)
+	if err != nil {
+		fmt.Printf("erro ao obter item do dynamo: %s", err)
+	}
+
+	err = attributevalue.UnmarshalMap(res.Item, u)
+	if err != nil {
+		fmt.Sprintf("erro no unmarshal da response do dynamo: %s", err)
+	}
+
+	return u, nil
+}
+
+func NewDynamoClient(client dynamodb.Client, cfg *config.Config) ClientDynamo {
+	return ClientDynamo{
+		Client:    client,
+		TableName: cfg.DynamoDBConfig.TableName,
+	}
 }

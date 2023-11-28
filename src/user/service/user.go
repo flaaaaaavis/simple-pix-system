@@ -1,7 +1,7 @@
 package service
 
 import (
-	"mentoria/src/user/model"
+	"mentoria/src/user/model/postgres_model"
 )
 
 type UserRepo interface {

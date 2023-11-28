@@ -2,15 +2,32 @@ package main
 
 import (
 	"fmt"
+	"log"
+
 	"mentoria/src/config"
 )
 
 func main() {
-	cfg := config.NewConfig()
+	cfg := *config.NewConfig()
 
-	_, err := config.Connection(cfg.Type)
+	// _, err := config.Connection(cfg.Type)
 
+	// if err != nil {
+	// 	log.Fatalf("erro ao setar nova conexão com o GORM: %s", err)
+	// }
+
+	// cl := *config.ConnectionDynamo()
+
+	// _ = dynamo.NewDynamoClient(cl)
+
+	res, err := config.CreateTables(cfg.DynamoDBConfig)
 	if err != nil {
-		fmt.Errorf("erro ao setar nova conexão com o GORM: %s", err)
+		fmt.Println("erro aqui")
+		log.Fatalf("error %v", err)
 	}
+
+	fmt.Sprintf("retorno %s", res.DescribeTable)
+
+	log.Fatalln("terminou")
+
 }

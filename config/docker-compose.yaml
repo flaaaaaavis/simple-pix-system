@@ -3,19 +3,12 @@ version: '3'
 services:
 
   postgres:
-
     image: postgres
-
     environment:
-
       POSTGRES_PASSWORD: "1234"
-
       POSTGRES_USER: "postgres"
-
       POSTGRES_DB: "postgres"
-
     ports:
-
       - "5432:5432"
 
   dynamodb-local:
@@ -23,15 +16,3 @@ services:
     container_name: dynamodb-local
     ports:
       - "8000:8000"
-
-  dynamodb-admin:
-    image: aaronshaf/dynamodb-admin
-    ports:
-      - "8001:8001"
-    environment:
-      DYNAMO_ENDPOINT: "http://dynamodb-local:8000"
-      AWS_REGION: "us-west-2"
-      AWS_ACCESS_KEY_ID: local
-      AWS_SECRET_ACCESS_KEY: local
-    depends_on:
-      - dynamodb-local

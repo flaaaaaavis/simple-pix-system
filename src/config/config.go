@@ -6,6 +6,9 @@ const (
 	User     = "postgres"
 	Password = "1234"
 	DbName   = "postgres"
+
+	Region  = "us-east-1"
+	Enpoint = "http://localhost:8000"
 )
 
 type DatabaseConfig struct {
@@ -17,7 +20,13 @@ type DatabaseConfig struct {
 }
 
 type Config struct {
-	Type DatabaseConfig
+	Type           DatabaseConfig
+	DynamoDBConfig DynamoConfig
+}
+
+type DynamoConfig struct {
+	TableName string
+	Region    string
 }
 
 func NewConfig() *Config {
@@ -28,6 +37,10 @@ func NewConfig() *Config {
 			User:     User,
 			Password: Password,
 			DbName:   DbName,
+		},
+		DynamoDBConfig: DynamoConfig{
+			TableName: "User",
+			Region:    Region,
 		},
 	}
 }
