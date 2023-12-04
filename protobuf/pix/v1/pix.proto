@@ -49,6 +49,7 @@ message ListUserTransactionsByIdResponse {
 }
 
 service PixService {
+//  RPC é remote procedure call - g é de google
   rpc CreateBankAccount(BankAccount) returns (BankAccount) {}
   rpc GetBankAccountById(BankAccount) returns (BankAccount) {}
 
