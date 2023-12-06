@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"log"
 
 	pb "mentoria/protos/protobuf/user/v1"
@@ -14,7 +15,7 @@ type UserService struct {
 	svcRepo service.ContactRepo
 }
 
-func (u *UserService) CreateContact(c *pb.Contact) (*pb.Contact, error) {
+func (u *UserService) CreateContact(ctx context.Context, c *pb.Contact) (*pb.Contact, error) {
 
 	modelUser := &model.Contact{
 		Email:       c.Email,
@@ -29,5 +30,5 @@ func (u *UserService) CreateContact(c *pb.Contact) (*pb.Contact, error) {
 
 	conv := pkg.ContatcFromProto(res)
 
-	return conv	, nil
+	return conv, nil
 }
