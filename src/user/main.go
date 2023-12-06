@@ -1,10 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"net"
 
 	"mentoria/src/config"
+	"mentoria/src/server"
+
+	"google.golang.org/grpc"
+
+	pb "mentoria/protos/protobuf/user/v1"
 )
 
 func main() {
@@ -20,13 +25,27 @@ func main() {
 
 	// _ = dynamo.NewDynamoClient(cl)
 
-	res, err := config.CreateTables(cfg.DynamoDBConfig)
+	lis, err := net.Listen("tcp", "localhost:9003")
 	if err != nil {
-		fmt.Println("erro aqui")
-		log.Fatalf("error %v", err)
+		log.Fatalf("error on start rpc Server, %v", err)
 	}
 
-	fmt.Sprintf("retorno %s", res.DescribeTable)
+	usr := server.UserService{}
+
+	grpcServer := grpc.NewServer()
+
+	pb.RegisterUserServiceServer(grpcServer, &usr)
+
+	log.Println("Listening on port 9003")
+
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("failed server %v", err)
+	}
+
+	_, err = config.CreateTables(cfg.DynamoDBConfig)
+	if err != nil {
+		log.Fatalf("error %v", err)
+	}
 
 	log.Fatalln("terminou")
 
