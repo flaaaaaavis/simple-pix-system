@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
@@ -56,7 +55,7 @@ func TestCreatePixCode(t *testing.T) {
 			defer func(conn *sql.DB) {
 				err := conn.Close()
 				if err != nil {
-					fmt.Sprintf("Error closing connection")
+					log.Fatalf("Error closing connection")
 				}
 			}(conn)
 

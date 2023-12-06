@@ -57,7 +57,7 @@ func (d *ClientDynamo) GetUser(ctx context.Context, user *model.User) (*model.Us
 
 	err = attributevalue.UnmarshalMap(res.Item, u)
 	if err != nil {
-		fmt.Sprintf("erro no unmarshal da response do dynamo: %s", err)
+		log.Fatalf("erro no unmarshal da response do dynamo: %s", err)
 	}
 
 	return u, nil

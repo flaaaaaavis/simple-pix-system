@@ -2,8 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
-
 	"gorm.io/gorm"
 
 	"mentoria/src/pix/model"
@@ -17,7 +15,7 @@ type bankAccountRepository struct {
 func (b bankAccountRepository) CreateBankAccount(newBankAccount *model.BankAccount) (*model.BankAccount, error) {
 	err := b.gormConnection.Create(newBankAccount)
 	if err.Error != nil {
-		fmt.Sprintf("Error when creating new bank account: %v", err.Error)
+		log.Fatalf("Error when creating new bank account: %v", err.Error)
 
 		return nil, err.Error
 	}
@@ -27,25 +25,25 @@ func (b bankAccountRepository) CreateBankAccount(newBankAccount *model.BankAccou
 
 func (b bankAccountRepository) GetBankAccountById(id string) (*model.BankAccount, error) {
 	bankAccount := &model.BankAccount{}
-	condition := fmt.Sprintf("id=%v", id)
+	condition := log.Println("id=%v", id)
 
 	result := b.gormConnection.First(model.BankAccount{}, condition)
 	if result.Error != nil {
-		fmt.Sprintf("Error when getting BankAccount from id: %v", result.Error)
+		log.Fatalf("Error when getting BankAccount from id: %v", result.Error)
 
 		return nil, result.Error
 	}
 
 	rows, err := result.Rows()
 	if err != nil {
-		fmt.Sprintf("Error when getting bankAccount: %v", err.Error())
+		log.Fatalf("Error when getting bankAccount: %v", err.Error())
 
 		return nil, errors.New(err.Error())
 	}
 
 	err = result.ScanRows(rows, bankAccount)
 	if err != nil {
-		fmt.Sprintf("Error when getting bankAccount: %v", err.Error())
+		log.Fatalf("Error when getting bankAccount: %v", err.Error())
 
 		return nil, errors.New(err.Error())
 	}

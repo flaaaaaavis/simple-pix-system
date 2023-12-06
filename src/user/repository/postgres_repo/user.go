@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 	"gorm.io/gorm"
 	"mentoria/src/user/model/postgres_model"
 	"mentoria/src/user/service"
@@ -15,7 +14,7 @@ type userRepository struct {
 func (u userRepository) CreateUser(user *model.User) (*model.User, error) {
 	err := u.gormConnection.Create(user)
 	if err.Error != nil {
-		fmt.Sprintf("Error when creating new user: %v", err.Error)
+		log.Fatalf("Error when creating new user: %v", err.Error)
 
 		return nil, err.Error
 	}
@@ -25,25 +24,25 @@ func (u userRepository) CreateUser(user *model.User) (*model.User, error) {
 
 func (u userRepository) GetUserById(id string) (*model.User, error) {
 	user := &model.User{}
-	condition := fmt.Sprintf("id=%v", id)
+	condition := log.Println("id=%v", id)
 
 	result := u.gormConnection.First(model.User{}, condition)
 	if result.Error != nil {
-		fmt.Sprintf("Error when getting user: %v", result.Error)
+		log.Fatalf("Error when getting user: %v", result.Error)
 
 		return nil, result.Error
 	}
 
 	rows, err := result.Rows()
 	if err != nil {
-		fmt.Sprintf("Error when getting user: %v", err.Error())
+		log.Fatalf("Error when getting user: %v", err.Error())
 
 		return nil, errors.New(err.Error())
 	}
 
 	err = result.ScanRows(rows, user)
 	if err != nil {
-		fmt.Sprintf("Error when getting user: %v", err.Error())
+		log.Fatalf("Error when getting user: %v", err.Error())
 
 		return nil, errors.New(err.Error())
 	}
@@ -56,7 +55,7 @@ func (u userRepository) ListUsers() ([]*model.User, error) {
 
 	result := u.gormConnection.Find(&users)
 	if result.Error != nil {
-		fmt.Sprintf("Error when listing users: %s", result.Error)
+		log.Fatalf("Error when listing users: %s", result.Error)
 		return nil, result.Error
 	}
 
@@ -66,7 +65,7 @@ func (u userRepository) ListUsers() ([]*model.User, error) {
 func (u userRepository) UpdateUserById(newUser *model.User) (*model.User, error) {
 	err := u.gormConnection.Model(newUser).Where("id IN (?)", newUser.ID).Updates(newUser)
 	if err.Error != nil {
-		fmt.Sprintf("Error when updating user: %v", err.Error)
+		log.Fatalf("Error when updating user: %v", err.Error)
 
 		return nil, err.Error
 	}

@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
@@ -58,7 +57,7 @@ func TestCreatePix(t *testing.T) {
 			defer func(conn *sql.DB) {
 				err := conn.Close()
 				if err != nil {
-					fmt.Sprintf("Error closing connection")
+					log.Fatalf("Error closing connection")
 				}
 			}(conn)
 

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"gorm.io/gorm"
+	"log"
 	"mentoria/src/pix/model"
 	"mentoria/src/pix/service"
 )
@@ -15,7 +16,7 @@ type pixRepository struct {
 func (p pixRepository) CreatePix(newPix *model.Pix) (*model.Pix, error) {
 	err := p.gormConnection.Create(newPix)
 	if err.Error != nil {
-		fmt.Sprintf("Error when creating new pix: %v", err.Error)
+		log.Fatalf("Error when creating new pix: %v", err.Error)
 
 		return nil, err.Error
 	}
@@ -29,21 +30,21 @@ func (p pixRepository) GetPixById(id string) (*model.Pix, error) {
 
 	result := p.gormConnection.First(model.Pix{}, condition)
 	if result.Error != nil {
-		fmt.Sprintf("Error when getting Pix from id: %v", result.Error)
+		log.Fatalf("Error when getting Pix from id: %v", result.Error)
 
 		return nil, result.Error
 	}
 
 	rows, err := result.Rows()
 	if err != nil {
-		fmt.Sprintf("Error when getting Pix: %v", err.Error())
+		log.Fatalf("Error when getting Pix: %v", err.Error())
 
 		return nil, errors.New(err.Error())
 	}
 
 	err = result.ScanRows(rows, Pix)
 	if err != nil {
-		fmt.Sprintf("Error when getting Pix: %v", err.Error())
+		log.Fatalf("Error when getting Pix: %v", err.Error())
 
 		return nil, errors.New(err.Error())
 	}
@@ -54,7 +55,7 @@ func (p pixRepository) GetPixById(id string) (*model.Pix, error) {
 func (p pixRepository) UpdatePixBalance(newPix *model.Pix) (*model.Pix, error) {
 	err := p.gormConnection.Model(newPix).Where("id IN (?)", newPix.ID).Updates(newPix)
 	if err.Error != nil {
-		fmt.Sprintf("Error when updating contact: %v", err.Error)
+		log.Fatalf("Error when updating contact: %v", err.Error)
 
 		return nil, err.Error
 	}

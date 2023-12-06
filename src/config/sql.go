@@ -12,7 +12,7 @@ import (
 )
 
 func Connection(config DatabaseConfig) (*gorm.DB, error) {
-	dns := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", config.Host, config.Port, config.User, config.Password, config.DbName)
+	dns := log.Println("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", config.Host, config.Port, config.User, config.Password, config.DbName)
 
 	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
 
