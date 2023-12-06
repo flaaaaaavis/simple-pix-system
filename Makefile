@@ -1,6 +1,6 @@
 generate:
-	@protoc --proto_path=protobuf --go_out=plugind=grpc:protobuf/gen --go_opt=source_relative user/v1/user.proto
-	@protoc --proto_path=protobuf --go_out=plugind=grpc:protobuf/gen --go_opt=source_relative pix/v1/pix.proto
+	@protoc --go_out=./protos --go_opt=paths=source_relative --go-grpc_out=./protos --go-grpc_opt=paths=source_relative protobuf/user/v1/user.proto
+	@protoc --go_out=./protos --go_opt=paths=source_relative --go-grpc_out=./protos --go-grpc_opt=paths=source_relative protobuf/pix/v1/pix.proto
 
 build:
 	@echo "........Building application........"

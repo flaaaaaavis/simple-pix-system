@@ -22,6 +22,7 @@ type PixCodeRepo interface {
 	DeletePixCode(code string) error
 }
 
+
 type TransactionRepo interface {
 	CreateTransaction(newTransaction *model.Transaction) (*model.Transaction, error)
 	ListUserTransactionsById(id string) ([]model.Transaction, error)
