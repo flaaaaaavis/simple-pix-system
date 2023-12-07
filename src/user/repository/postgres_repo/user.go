@@ -2,7 +2,9 @@ package repository
 
 import (
 	"errors"
+	"fmt"
 	"gorm.io/gorm"
+	"log"
 	"mentoria/src/user/model/postgres_model"
 	"mentoria/src/user/service"
 )
@@ -24,7 +26,7 @@ func (u userRepository) CreateUser(user *model.User) (*model.User, error) {
 
 func (u userRepository) GetUserById(id string) (*model.User, error) {
 	user := &model.User{}
-	condition := log.Println("id=%v", id)
+	condition := fmt.Sprintf("id=%v", id)
 
 	result := u.gormConnection.First(model.User{}, condition)
 	if result.Error != nil {
