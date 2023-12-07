@@ -26,7 +26,7 @@ func main() {
 		log.Fatalf("error %v", err)
 	}
 
-	log.Println("retorno %s", res.DescribeTable)
+	log.Printf("retorno %s", res.DescribeTable)
 
 	log.Fatalln("terminou")
 
