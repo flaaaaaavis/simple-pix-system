@@ -53,9 +53,12 @@ func (p pixRepository) GetPixById(id string) (*model.Pix, error) {
 }
 
 func (p pixRepository) UpdatePixBalance(newPix *model.Pix) (*model.Pix, error) {
-	err := p.gormConnection.Model(newPix).Where("id IN (?)", newPix.ID).Updates(newPix)
+	pix := &model.Pix{
+		Balance: newPix.Balance,
+	}
+	err := p.gormConnection.Model(newPix).Where("id IN (?)", newPix.ID).Updates(pix)
 	if err.Error != nil {
-		log.Fatalf("Error when updating contact: %v", err.Error)
+		log.Fatalf("Error when updating pix: %v", err.Error)
 
 		return nil, err.Error
 	}
