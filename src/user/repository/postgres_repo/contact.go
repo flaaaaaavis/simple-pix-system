@@ -1,8 +1,10 @@
 package repository
 
 import (
+	"context"
 	"errors"
 	"gorm.io/gorm"
+	"log"
 	"mentoria/src/user/model/postgres_model"
 	"mentoria/src/user/service"
 )
@@ -11,7 +13,7 @@ type contactRepository struct {
 	gormConnection *gorm.DB
 }
 
-func (c contactRepository) CreateContact(newContact *model.Contact) (*model.Contact, error) {
+func (c contactRepository) CreateContact(ctx context.Context, newContact *model.Contact) (*model.Contact, error) {
 	err := c.gormConnection.Create(newContact)
 	if err.Error != nil {
 		log.Fatalf("Error when creating new contact: %s", err.Error)

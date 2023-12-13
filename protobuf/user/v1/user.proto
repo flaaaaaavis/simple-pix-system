@@ -38,7 +38,7 @@ service UserService {
 
   rpc CreateUser(User) returns (User){}
   rpc GetUserById(GetUserByIdRequest) returns (User){}
-  rpc ListUsers(User) returns (ListUsersResponse){}
+  rpc ListUsers() returns (ListUsersResponse){}
   rpc UpdateUserById(User) returns (User){}
 }
 

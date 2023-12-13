@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
-
 	"mentoria/src/config"
+	"mentoria/src/server"
 )
 
 func main() {
@@ -20,14 +20,16 @@ func main() {
 
 	// _ = dynamo.NewDynamoClient(cl)
 
-	res, err := config.CreateTables(cfg.DynamoDBConfig)
+	_, err := config.CreateTables(cfg.DynamoDBConfig)
 	if err != nil {
 		fmt.Println("erro aqui")
 		log.Fatalf("error %v", err)
 	}
 
-	log.Printf("retorno %s", res.DescribeTable)
+	/*log.Printf("retorno %s", res.DescribeTable)*/
+
+	server.NewGRPC()
+	log.Println("Listening on port 9003")
 
 	log.Fatalln("terminou")
-
 }

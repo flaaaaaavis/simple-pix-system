@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"gorm.io/gorm"
@@ -52,7 +53,7 @@ func (u userRepository) GetUserById(id string) (*model.User, error) {
 	return user, nil
 }
 
-func (u userRepository) ListUsers() ([]*model.User, error) {
+func (u userRepository) ListUsers(ctx context.Context) ([]*model.User, error) {
 	var users []*model.User
 
 	result := u.gormConnection.Find(&users)

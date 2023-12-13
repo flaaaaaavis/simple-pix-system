@@ -108,12 +108,10 @@ func Connection(config DatabaseConfig) (*gorm.DB, error) {
 	transactionId := uuid.New()
 	db.Create(&model.Transaction{
 		ID:         transactionId,
-		Type:       model.TransactionTypePayment,
 		Date:       time.Now(),
 		Amount:     decimal.NewFromFloat(500.00),
 		SenderID:   pixId,
 		ReceiverID: pixId2,
-		Status:     model.TransactionStatusPending,
 	})
 	return db, nil
 }

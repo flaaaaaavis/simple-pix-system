@@ -65,5 +65,4 @@ service PixService {
 
   rpc CreateTransaction(Transaction) returns (Transaction) {}
   rpc ListUserTransactionsById(Transaction) returns (ListUserTransactionsByIdResponse) {}
-  rpc UpdateTransactionById(Transaction) returns (Transaction) {}
 }

@@ -1,13 +1,14 @@
 package service
 
 import (
+	"context"
 	"mentoria/src/user/model/postgres_model"
 )
 
 type UserRepo interface {
 	CreateUser(user *model.User) (*model.User, error)
 	GetUserById(id string) (*model.User, error)
-	ListUsers() ([]*model.User, error)
+	ListUsers(ctx context.Context) ([]*model.User, error)
 	UpdateUserById(newUser *model.User) (*model.User, error)
 }
 

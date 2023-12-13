@@ -36,7 +36,6 @@ type PixServiceClient interface {
 	DeletePixCode(ctx context.Context, in *PixCode, opts ...grpc.CallOption) (*empty.Empty, error)
 	CreateTransaction(ctx context.Context, in *Transaction, opts ...grpc.CallOption) (*Transaction, error)
 	ListUserTransactionsById(ctx context.Context, in *Transaction, opts ...grpc.CallOption) (*ListUserTransactionsByIdResponse, error)
-	UpdateTransactionById(ctx context.Context, in *Transaction, opts ...grpc.CallOption) (*Transaction, error)
 }
 
 type pixServiceClient struct {
@@ -155,15 +154,6 @@ func (c *pixServiceClient) ListUserTransactionsById(ctx context.Context, in *Tra
 	return out, nil
 }
 
-func (c *pixServiceClient) UpdateTransactionById(ctx context.Context, in *Transaction, opts ...grpc.CallOption) (*Transaction, error) {
-	out := new(Transaction)
-	err := c.cc.Invoke(ctx, "/mentoria.pix.v1.PixService/UpdateTransactionById", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // PixServiceServer is the server API for PixService service.
 // All implementations must embed UnimplementedPixServiceServer
 // for forward compatibility
@@ -181,7 +171,6 @@ type PixServiceServer interface {
 	DeletePixCode(context.Context, *PixCode) (*empty.Empty, error)
 	CreateTransaction(context.Context, *Transaction) (*Transaction, error)
 	ListUserTransactionsById(context.Context, *Transaction) (*ListUserTransactionsByIdResponse, error)
-	UpdateTransactionById(context.Context, *Transaction) (*Transaction, error)
 	mustEmbedUnimplementedPixServiceServer()
 }
 
@@ -224,9 +213,6 @@ func (UnimplementedPixServiceServer) CreateTransaction(context.Context, *Transac
 }
 func (UnimplementedPixServiceServer) ListUserTransactionsById(context.Context, *Transaction) (*ListUserTransactionsByIdResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserTransactionsById not implemented")
-}
-func (UnimplementedPixServiceServer) UpdateTransactionById(context.Context, *Transaction) (*Transaction, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateTransactionById not implemented")
 }
 func (UnimplementedPixServiceServer) mustEmbedUnimplementedPixServiceServer() {}
 
@@ -457,24 +443,6 @@ func _PixService_ListUserTransactionsById_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PixService_UpdateTransactionById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Transaction)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PixServiceServer).UpdateTransactionById(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/mentoria.pix.v1.PixService/UpdateTransactionById",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PixServiceServer).UpdateTransactionById(ctx, req.(*Transaction))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // PixService_ServiceDesc is the grpc.ServiceDesc for PixService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -529,10 +497,6 @@ var PixService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUserTransactionsById",
 			Handler:    _PixService_ListUserTransactionsById_Handler,
-		},
-		{
-			MethodName: "UpdateTransactionById",
-			Handler:    _PixService_UpdateTransactionById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
