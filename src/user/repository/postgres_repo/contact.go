@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"fmt"
 	"gorm.io/gorm"
 	"log"
 	"mentoria/src/user/model/postgres_model"
@@ -24,10 +25,10 @@ func (c contactRepository) CreateContact(ctx context.Context, newContact *model.
 	return newContact, nil
 }
 
-func (c contactRepository) GetContactById(id string) (*model.Contact, error) {
+func (c contactRepository) GetContactById(ctx context.Context, id string) (*model.Contact, error) {
 	contact := &model.Contact{}
 
-	condition := log.Println("id=%s", id)
+	condition := fmt.Sprintf("id=%s", id)
 
 	result := c.gormConnection.First(model.Contact{}, condition)
 	if result.Error != nil {
@@ -53,7 +54,7 @@ func (c contactRepository) GetContactById(id string) (*model.Contact, error) {
 	return contact, nil
 }
 
-func (c contactRepository) UpdateContactById(newContact *model.Contact) (*model.Contact, error) {
+func (c contactRepository) UpdateContactById(ctx context.Context, newContact *model.Contact) (*model.Contact, error) {
 	err := c.gormConnection.Model(newContact).Where("id IN (?)", newContact.ID).Updates(newContact)
 	if err.Error != nil {
 		log.Fatalf("Error when updating contact: %s", err.Error)

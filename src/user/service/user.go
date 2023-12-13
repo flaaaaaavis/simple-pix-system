@@ -6,14 +6,14 @@ import (
 )
 
 type UserRepo interface {
-	CreateUser(user *model.User) (*model.User, error)
-	GetUserById(id string) (*model.User, error)
+	CreateUser(ctx context.Context, user *model.User) (*model.User, error)
+	GetUserById(ctx context.Context, id string) (*model.User, error)
 	ListUsers(ctx context.Context) ([]*model.User, error)
-	UpdateUserById(newUser *model.User) (*model.User, error)
+	UpdateUserById(ctx context.Context, newUser *model.User) (*model.User, error)
 }
 
 type ContactRepo interface {
-	CreateContact(newContact *model.Contact) (*model.Contact, error)
-	GetContactById(id string) (*model.Contact, error)
-	UpdateContactById(newContact *model.Contact) (*model.Contact, error)
+	CreateContact(ctx context.Context, newContact *model.Contact) (*model.Contact, error)
+	GetContactById(ctx context.Context, id string) (*model.Contact, error)
+	UpdateContactById(ctx context.Context, newContact *model.Contact) (*model.Contact, error)
 }

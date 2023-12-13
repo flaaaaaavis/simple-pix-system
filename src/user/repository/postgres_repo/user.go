@@ -14,7 +14,7 @@ type userRepository struct {
 	gormConnection *gorm.DB
 }
 
-func (u userRepository) CreateUser(user *model.User) (*model.User, error) {
+func (u userRepository) CreateUser(ctx context.Context, user *model.User) (*model.User, error) {
 	err := u.gormConnection.Create(user)
 	if err.Error != nil {
 		log.Fatalf("Error when creating new user: %v", err.Error)
@@ -25,7 +25,7 @@ func (u userRepository) CreateUser(user *model.User) (*model.User, error) {
 	return user, nil
 }
 
-func (u userRepository) GetUserById(id string) (*model.User, error) {
+func (u userRepository) GetUserById(ctx context.Context, id string) (*model.User, error) {
 	user := &model.User{}
 	condition := fmt.Sprintf("id=%v", id)
 
@@ -65,7 +65,7 @@ func (u userRepository) ListUsers(ctx context.Context) ([]*model.User, error) {
 	return users, nil
 }
 
-func (u userRepository) UpdateUserById(newUser *model.User) (*model.User, error) {
+func (u userRepository) UpdateUserById(ctx context.Context, newUser *model.User) (*model.User, error) {
 	err := u.gormConnection.Model(newUser).Where("id IN (?)", newUser.ID).Updates(newUser)
 	if err.Error != nil {
 		log.Fatalf("Error when updating user: %v", err.Error)

@@ -4,6 +4,7 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	pb "mentoria/protobuf/user/v1"
+	"mentoria/server"
 	"net"
 )
 
@@ -16,9 +17,9 @@ func NewGRPC() (*grpc.Server, error) {
 		return nil, err
 	}
 
-	/*userSvc := server.UserServer{}
-	 */
-	pb.RegisterUserServiceServer(grpcServer, nil)
+	userSvc := server.UserServer{}
+
+	pb.RegisterUserServiceServer(grpcServer, &userSvc)
 
 	err = grpcServer.Serve(listener)
 	if err != nil {
