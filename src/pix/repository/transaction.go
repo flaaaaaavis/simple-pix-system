@@ -1,7 +1,9 @@
 package repository
 
 import (
+	"fmt"
 	"gorm.io/gorm"
+	"log"
 	"mentoria/src/pix/model"
 	"mentoria/src/pix/service"
 )
@@ -24,7 +26,7 @@ func (t transactionRepository) CreateTransaction(newTransaction *model.Transacti
 func (t transactionRepository) ListUserTransactionsById(id string) ([]model.Transaction, error) {
 	var transactions []model.Transaction
 
-	condition := log.Println("sender_id=%v OR receiver_id=%v", id, id)
+	condition := fmt.Sprintf("sender_id=%v OR receiver_id=%v", id, id)
 
 	result := t.gormConnection.Where(condition).Find(&transactions)
 	if result.Error != nil {
@@ -33,17 +35,6 @@ func (t transactionRepository) ListUserTransactionsById(id string) ([]model.Tran
 	}
 
 	return transactions, nil
-}
-
-func (t transactionRepository) UpdateTransactionById(transaction *model.Transaction) (*model.Transaction, error) {
-	err := t.gormConnection.Model(transaction).Where("id IN (?)", transaction.ID).Updates(transaction)
-	if err.Error != nil {
-		log.Fatalf("Error when updating transaction: %s", err.Error)
-
-		return nil, err.Error
-	}
-
-	return transaction, nil
 }
 
 func NewTransaction(db *gorm.DB) service.TransactionRepo {

@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 	"mentoria/src/pix/model"
 	"testing"
 	"time"
@@ -31,29 +32,25 @@ func TestCreateTransaction(t *testing.T) {
 			name: "Success creating new Transaction",
 			req: &model.Transaction{
 				ID:         mockUuid,
-				Type:       model.TransactionTypePayment,
 				Date:       date,
 				Amount:     decimal.NewFromFloat(500.00),
 				SenderID:   senderId,
 				ReceiverID: receiverId,
-				Status:     model.TransactionStatusDone,
 			},
 			mockFunc: func(sqlMock sqlmock.Sqlmock) {
 				sqlMock.ExpectBegin()
 				sqlMock.ExpectQuery("INSERT INTO").
-					WithArgs(model.TransactionTypePayment, date, decimal.NewFromFloat(500.00), senderId, receiverId, model.TransactionStatusDone, mockUuid).
+					WithArgs(date, decimal.NewFromFloat(500.00), senderId, receiverId, mockUuid).
 					WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(mockUuid))
 				sqlMock.ExpectCommit()
 			},
 			wantErr: nil,
 			want: &model.Transaction{
 				ID:         mockUuid,
-				Type:       model.TransactionTypePayment,
 				Date:       date,
 				Amount:     decimal.NewFromFloat(500.00),
 				SenderID:   senderId,
 				ReceiverID: receiverId,
-				Status:     model.TransactionStatusDone,
 			},
 		},
 	}
