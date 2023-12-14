@@ -4,12 +4,11 @@ import (
 	"log"
 	"net"
 
-	"mentoria/src/config"
-	"mentoria/src/server"
-
 	"google.golang.org/grpc"
 
 	pb "mentoria/protos/protobuf/user/v1"
+	"mentoria/src/config"
+	"mentoria/src/server"
 )
 
 func main() {
