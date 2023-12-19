@@ -3,14 +3,15 @@ package server
 import (
 	"context"
 	gofrs "github.com/gofrs/uuid"
+	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/google/uuid"
 	"log"
 	pb "mentoria/protobuf/user/v1"
 	model "mentoria/src/user/model/postgres_model"
 	"mentoria/src/user/service"
-	"mentoria/utils"
 )
 
+// UserServer communication interface between bff and proto
 type UserServer struct {
 	pb.UnimplementedUserServiceServer
 	userSvc    service.UserRepo
@@ -29,33 +30,34 @@ func (s *UserServer) CreateUser(ctx context.Context, proto *pb.User) (*pb.User, 
 		ContactID:  uuid.UUID(contactId),
 	}
 
-	res, err := s.userSvc.CreateUser(newUser)
+	res, err := s.userSvc.CreateUser(ctx, newUser)
 	if err != nil {
 		log.Fatalf("Error creating new user, %v", err)
 		return nil, err
 	}
 
-	user := utils.FromUserModelToProto(res)
+	user := model.FromUserModelToProto(res)
 
 	return user, nil
 }
 
 // GetUserById sends bff's user obtaining request to service through proto
-func (s *UserServer) GetUserById(ctx context.Context, id string) (*pb.User, error) {
-	res, err := s.userSvc.GetUserById(id)
+func (s *UserServer) GetUserById(ctx context.Context, proto *pb.GetUserByIdRequest) (*pb.User, error) {
+	modelReq := model.GetUserByIdRequestFromProto(proto)
+	res, err := s.userSvc.GetUserById(ctx, modelReq)
 	if err != nil {
 		log.Fatalf("Error getting user by id, %v", err)
 		return nil, err
 	}
 
-	user := utils.FromUserModelToProto(res)
+	user := model.FromUserModelToProto(res)
 
 	return user, nil
 }
 
 // ListUsers sends bff's users listing request to service through proto
-func (s *UserServer) ListUsers(ctx context.Context) (*pb.ListUsersResponse, error) {
-	modelUsers, err := s.userSvc.ListUsers(ctx)
+func (s *UserServer) ListUsers(ctx context.Context, empty *empty.Empty) (*pb.ListUsersResponse, error) {
+	modelUsers, err := s.userSvc.ListUsers(ctx, empty)
 	if err != nil {
 		log.Fatalf("Error listing users, %v", err)
 		return nil, err
@@ -64,7 +66,7 @@ func (s *UserServer) ListUsers(ctx context.Context) (*pb.ListUsersResponse, erro
 	var pbUsers []*pb.User
 
 	for i := 0; i < len(modelUsers); i++ {
-		pbUsers = append(pbUsers, utils.FromUserModelToProto(modelUsers[i]))
+		pbUsers = append(pbUsers, model.FromUserModelToProto(modelUsers[i]))
 	}
 
 	listRes := &pb.ListUsersResponse{
@@ -87,13 +89,13 @@ func (s *UserServer) UpdateUserById(ctx context.Context, proto *pb.User) (*pb.Us
 		ContactID:  uuid.UUID(contactId),
 	}
 
-	res, err := s.userSvc.UpdateUserById(newUser)
+	res, err := s.userSvc.UpdateUserById(ctx, newUser)
 	if err != nil {
 		log.Fatalf("Error updating user, %v", err)
 		return nil, err
 	}
 
-	user := utils.FromUserModelToProto(res)
+	user := model.FromUserModelToProto(res)
 
 	return user, nil
 }
@@ -107,32 +109,33 @@ func (s *UserServer) CreateContact(ctx context.Context, proto *pb.Contact) (*pb.
 		PhoneNumber: proto.PhoneNumber,
 	}
 
-	res, err := s.contactSvc.CreateContact(newContact)
+	res, err := s.contactSvc.CreateContact(ctx, newContact)
 	if err != nil {
 		log.Fatalf("Error creating new contact, %v", err)
 		return nil, err
 	}
 
-	contact := utils.FromContactModelToProto(res)
+	contact := model.FromContactModelToProto(res)
 
 	return contact, nil
 }
 
 // GetContactById sends bff's contact obtaining request to service through proto
-func (s *UserServer) GetContactById(ctx context.Context, id string) (*pb.Contact, error) {
-	res, err := s.contactSvc.GetContactById(id)
+func (s *UserServer) GetContactById(ctx context.Context, proto *pb.GetContactByIdRequest) (*pb.Contact, error) {
+	modelReq := model.GetContactByIdRequestFromProto(proto)
+	res, err := s.contactSvc.GetContactById(ctx, modelReq)
 	if err != nil {
 		log.Fatalf("Error getting contact by id, %v", err)
 		return nil, err
 	}
 
-	user := utils.FromContactModelToProto(res)
+	user := model.FromContactModelToProto(res)
 
 	return user, nil
 }
 
 // UpdateContactById sends bff's contact update request to service through proto
-func (s *UserServer) UpdateContactById(_ context.Context, proto *pb.Contact) (*pb.Contact, error) {
+func (s *UserServer) UpdateContactById(ctx context.Context, proto *pb.Contact) (*pb.Contact, error) {
 	id := gofrs.FromStringOrNil(proto.Id)
 
 	newContact := &model.Contact{
@@ -141,13 +144,13 @@ func (s *UserServer) UpdateContactById(_ context.Context, proto *pb.Contact) (*p
 		PhoneNumber: proto.PhoneNumber,
 	}
 
-	res, err := s.contactSvc.UpdateContactById(newContact)
+	res, err := s.contactSvc.UpdateContactById(ctx, newContact)
 	if err != nil {
 		log.Fatalf("Error updating contact, %v", err)
 		return nil, err
 	}
 
-	contact := utils.FromContactModelToProto(res)
+	contact := model.FromContactModelToProto(res)
 
 	return contact, nil
 }

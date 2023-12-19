@@ -8,6 +8,7 @@ package user
 
 import (
 	context "context"
+	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -27,7 +28,7 @@ type UserServiceClient interface {
 	UpdateContactById(ctx context.Context, in *Contact, opts ...grpc.CallOption) (*Contact, error)
 	CreateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
 	GetUserById(ctx context.Context, in *GetUserByIdRequest, opts ...grpc.CallOption) (*User, error)
-	ListUsers(ctx context.Context, in *User, opts ...grpc.CallOption) (*ListUsersResponse, error)
+	ListUsers(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	UpdateUserById(ctx context.Context, in *User, opts ...grpc.CallOption) (*User, error)
 }
 
@@ -84,7 +85,7 @@ func (c *userServiceClient) GetUserById(ctx context.Context, in *GetUserByIdRequ
 	return out, nil
 }
 
-func (c *userServiceClient) ListUsers(ctx context.Context, in *User, opts ...grpc.CallOption) (*ListUsersResponse, error) {
+func (c *userServiceClient) ListUsers(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*ListUsersResponse, error) {
 	out := new(ListUsersResponse)
 	err := c.cc.Invoke(ctx, "/mentoria.user.v1.UserService/ListUsers", in, out, opts...)
 	if err != nil {
@@ -111,7 +112,7 @@ type UserServiceServer interface {
 	UpdateContactById(context.Context, *Contact) (*Contact, error)
 	CreateUser(context.Context, *User) (*User, error)
 	GetUserById(context.Context, *GetUserByIdRequest) (*User, error)
-	ListUsers(context.Context, *User) (*ListUsersResponse, error)
+	ListUsers(context.Context, *empty.Empty) (*ListUsersResponse, error)
 	UpdateUserById(context.Context, *User) (*User, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -135,7 +136,7 @@ func (UnimplementedUserServiceServer) CreateUser(context.Context, *User) (*User,
 func (UnimplementedUserServiceServer) GetUserById(context.Context, *GetUserByIdRequest) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserById not implemented")
 }
-func (UnimplementedUserServiceServer) ListUsers(context.Context, *User) (*ListUsersResponse, error) {
+func (UnimplementedUserServiceServer) ListUsers(context.Context, *empty.Empty) (*ListUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
 }
 func (UnimplementedUserServiceServer) UpdateUserById(context.Context, *User) (*User, error) {
@@ -245,7 +246,7 @@ func _UserService_GetUserById_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _UserService_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(User)
+	in := new(empty.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -257,7 +258,7 @@ func _UserService_ListUsers_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/mentoria.user.v1.UserService/ListUsers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ListUsers(ctx, req.(*User))
+		return srv.(UserServiceServer).ListUsers(ctx, req.(*empty.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

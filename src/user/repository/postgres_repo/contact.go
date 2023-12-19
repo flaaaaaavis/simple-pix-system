@@ -25,10 +25,10 @@ func (c contactRepository) CreateContact(ctx context.Context, newContact *model.
 	return newContact, nil
 }
 
-func (c contactRepository) GetContactById(ctx context.Context, id string) (*model.Contact, error) {
+func (c contactRepository) GetContactById(ctx context.Context, req *model.GetContactByIdRequest) (*model.Contact, error) {
 	contact := &model.Contact{}
 
-	condition := fmt.Sprintf("id=%s", id)
+	condition := fmt.Sprintf("id=%s", req.ID)
 
 	result := c.gormConnection.First(model.Contact{}, condition)
 	if result.Error != nil {

@@ -4,6 +4,7 @@ package mentoria.user.v1;
 
 option go_package = "mentoria/user/v1;user";
 
+import "google/protobuf/empty.proto";
 
 message Contact {
   string id = 1;
@@ -38,7 +39,7 @@ service UserService {
 
   rpc CreateUser(User) returns (User){}
   rpc GetUserById(GetUserByIdRequest) returns (User){}
-  rpc ListUsers() returns (ListUsersResponse){}
+  rpc ListUsers(google.protobuf.Empty) returns (ListUsersResponse){}
   rpc UpdateUserById(User) returns (User){}
 }
 

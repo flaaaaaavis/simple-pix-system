@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/golang/protobuf/ptypes/empty"
 	"gorm.io/gorm"
 	"log"
 	"mentoria/src/user/model/postgres_model"
@@ -25,9 +26,9 @@ func (u userRepository) CreateUser(ctx context.Context, user *model.User) (*mode
 	return user, nil
 }
 
-func (u userRepository) GetUserById(ctx context.Context, id string) (*model.User, error) {
+func (u userRepository) GetUserById(ctx context.Context, req *model.GetUserByIdRequest) (*model.User, error) {
 	user := &model.User{}
-	condition := fmt.Sprintf("id=%v", id)
+	condition := fmt.Sprintf("id=%v", req.ID)
 
 	result := u.gormConnection.First(model.User{}, condition)
 	if result.Error != nil {
@@ -53,7 +54,7 @@ func (u userRepository) GetUserById(ctx context.Context, id string) (*model.User
 	return user, nil
 }
 
-func (u userRepository) ListUsers(ctx context.Context) ([]*model.User, error) {
+func (u userRepository) ListUsers(ctx context.Context, empty *empty.Empty) ([]*model.User, error) {
 	var users []*model.User
 
 	result := u.gormConnection.Find(&users)

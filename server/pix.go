@@ -8,10 +8,10 @@ import (
 	pb "mentoria/protobuf/pix/v1"
 	"mentoria/src/pix/model"
 	"mentoria/src/pix/service"
-	"mentoria/utils"
 	"time"
 )
 
+// PixServer communication interface between bff and proto
 type PixServer struct {
 	proto          pb.UnimplementedPixServiceServer
 	bankAccountSvc service.BankAccountRepo
@@ -37,7 +37,7 @@ func (s *PixServer) CreateBankAccount(proto *pb.BankAccount) (*pb.BankAccount, e
 		return nil, err
 	}
 
-	bankAccount := utils.FromBankAccountModelToProto(res)
+	bankAccount := model.FromBankAccountModelToProto(res)
 
 	return bankAccount, nil
 }
@@ -50,7 +50,7 @@ func (s *PixServer) GetBankAccountById(id string) (*pb.BankAccount, error) {
 		return nil, err
 	}
 
-	bankAccount := utils.FromBankAccountModelToProto(res)
+	bankAccount := model.FromBankAccountModelToProto(res)
 
 	return bankAccount, nil
 }
@@ -75,7 +75,7 @@ func (s *PixServer) CreatePix(proto *pb.Pix) (*pb.Pix, error) {
 		return nil, err
 	}
 
-	pix := utils.FromPixModelToProto(res)
+	pix := model.FromPixModelToProto(res)
 
 	return pix, nil
 }
@@ -88,7 +88,7 @@ func (s *PixServer) GetPixById(id string) (*pb.Pix, error) {
 		return nil, err
 	}
 
-	pix := utils.FromPixModelToProto(res)
+	pix := model.FromPixModelToProto(res)
 
 	return pix, nil
 }
@@ -109,7 +109,7 @@ func (s *PixServer) UpdatePixBalance(proto *pb.Pix) (*pb.Pix, error) {
 		return nil, err
 	}
 
-	pix := utils.FromPixModelToProto(res)
+	pix := model.FromPixModelToProto(res)
 
 	return pix, nil
 }
@@ -132,7 +132,7 @@ func (s *PixServer) CreatePixCode(proto *pb.PixCode) (*pb.PixCode, error) {
 		return nil, err
 	}
 
-	pixCode := utils.FromPixCodeModelToProto(res)
+	pixCode := model.FromPixCodeModelToProto(res)
 
 	return pixCode, nil
 }
@@ -145,7 +145,7 @@ func (s *PixServer) GetPixCodeByPixId(id string) (*pb.PixCode, error) {
 		return nil, err
 	}
 
-	pixCode := utils.FromPixCodeModelToProto(res)
+	pixCode := model.FromPixCodeModelToProto(res)
 
 	return pixCode, nil
 }
@@ -158,7 +158,7 @@ func (s *PixServer) GetPixCodeByCode(code string) (*pb.PixCode, error) {
 		return nil, err
 	}
 
-	pixCode := utils.FromPixCodeModelToProto(res)
+	pixCode := model.FromPixCodeModelToProto(res)
 
 	return pixCode, nil
 }
@@ -202,7 +202,7 @@ func (s *PixServer) CreateTransaction(proto *pb.Transaction) (*pb.Transaction, e
 		return nil, err
 	}
 
-	transaction := utils.FromTransactionModelToProto(res)
+	transaction := model.FromTransactionModelToProto(res)
 
 	return transaction, nil
 }
@@ -218,7 +218,7 @@ func (s *PixServer) ListUserTransactionsById(id string) ([]*pb.Transaction, erro
 	var transactions []*pb.Transaction
 
 	for i := 0; i < len(res); i++ {
-		transactions = append(transactions, utils.FromTransactionModelToProto(&res[i]))
+		transactions = append(transactions, model.FromTransactionModelToProto(&res[i]))
 	}
 
 	return transactions, nil
