@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/golang/protobuf/ptypes/empty"
 	"gorm.io/gorm"
 	"log"
 	"mentoria/src/user/model/postgres_model"
@@ -56,7 +55,7 @@ func (u userRepository) GetUserById(_ context.Context, req *model.GetUserByIdReq
 	return user, nil
 }
 
-func (u userRepository) ListUsers(_ context.Context, _ *empty.Empty) ([]*model.User, error) {
+func (u userRepository) ListUsers(_ context.Context) ([]*model.User, error) {
 	var users []*model.User
 
 	result := u.gormConnection.Find(&users)
