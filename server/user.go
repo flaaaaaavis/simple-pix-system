@@ -14,8 +14,8 @@ import (
 // UserServer communication interface between bff and proto
 type UserServer struct {
 	pb.UnimplementedUserServiceServer
-	userSvc    service.UserRepo
-	contactSvc service.ContactRepo
+	UserSvc    service.UserService
+	ContactSvc service.ContactService
 }
 
 // CreateUser sends bff's user creation request to service through proto
@@ -30,7 +30,7 @@ func (s *UserServer) CreateUser(ctx context.Context, proto *pb.User) (*pb.User, 
 		ContactID:  uuid.UUID(contactId),
 	}
 
-	res, err := s.userSvc.CreateUser(ctx, newUser)
+	res, err := s.UserSvc.CreateUser(ctx, newUser)
 	if err != nil {
 		log.Fatalf("Error creating new user, %v", err)
 		return nil, err
@@ -44,7 +44,7 @@ func (s *UserServer) CreateUser(ctx context.Context, proto *pb.User) (*pb.User, 
 // GetUserById sends bff's user obtaining request to service through proto
 func (s *UserServer) GetUserById(ctx context.Context, proto *pb.GetUserByIdRequest) (*pb.User, error) {
 	modelReq := model.GetUserByIdRequestFromProto(proto)
-	res, err := s.userSvc.GetUserById(ctx, modelReq)
+	res, err := s.UserSvc.GetUserById(ctx, modelReq)
 	if err != nil {
 		log.Fatalf("Error getting user by id, %v", err)
 		return nil, err
@@ -56,8 +56,8 @@ func (s *UserServer) GetUserById(ctx context.Context, proto *pb.GetUserByIdReque
 }
 
 // ListUsers sends bff's users listing request to service through proto
-func (s *UserServer) ListUsers(ctx context.Context, empty *empty.Empty) (*pb.ListUsersResponse, error) {
-	modelUsers, err := s.userSvc.ListUsers(ctx, empty)
+func (s *UserServer) ListUsers(ctx context.Context, _ *empty.Empty) (*pb.ListUsersResponse, error) {
+	modelUsers, err := s.UserSvc.ListUsers(ctx)
 	if err != nil {
 		log.Fatalf("Error listing users, %v", err)
 		return nil, err
@@ -89,7 +89,7 @@ func (s *UserServer) UpdateUserById(ctx context.Context, proto *pb.User) (*pb.Us
 		ContactID:  uuid.UUID(contactId),
 	}
 
-	res, err := s.userSvc.UpdateUserById(ctx, newUser)
+	res, err := s.UserSvc.UpdateUserById(ctx, newUser)
 	if err != nil {
 		log.Fatalf("Error updating user, %v", err)
 		return nil, err
@@ -109,7 +109,7 @@ func (s *UserServer) CreateContact(ctx context.Context, proto *pb.Contact) (*pb.
 		PhoneNumber: proto.PhoneNumber,
 	}
 
-	res, err := s.contactSvc.CreateContact(ctx, newContact)
+	res, err := s.ContactSvc.CreateContact(ctx, newContact)
 	if err != nil {
 		log.Fatalf("Error creating new contact, %v", err)
 		return nil, err
@@ -123,7 +123,7 @@ func (s *UserServer) CreateContact(ctx context.Context, proto *pb.Contact) (*pb.
 // GetContactById sends bff's contact obtaining request to service through proto
 func (s *UserServer) GetContactById(ctx context.Context, proto *pb.GetContactByIdRequest) (*pb.Contact, error) {
 	modelReq := model.GetContactByIdRequestFromProto(proto)
-	res, err := s.contactSvc.GetContactById(ctx, modelReq)
+	res, err := s.ContactSvc.GetContactById(ctx, modelReq)
 	if err != nil {
 		log.Fatalf("Error getting contact by id, %v", err)
 		return nil, err
@@ -144,7 +144,7 @@ func (s *UserServer) UpdateContactById(ctx context.Context, proto *pb.Contact) (
 		PhoneNumber: proto.PhoneNumber,
 	}
 
-	res, err := s.contactSvc.UpdateContactById(ctx, newContact)
+	res, err := s.ContactSvc.UpdateContactById(ctx, newContact)
 	if err != nil {
 		log.Fatalf("Error updating contact, %v", err)
 		return nil, err

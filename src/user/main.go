@@ -1,10 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"google.golang.org/grpc"
 	"log"
+	pb "mentoria/protobuf/user/v1"
+	"mentoria/server"
 	"mentoria/src/config"
-	"mentoria/src/server"
+	"mentoria/src/user/repository/repo"
+	"net"
 )
 
 func main() {
@@ -12,22 +15,32 @@ func main() {
 
 	conn, err := config.Connection(cfg.Type)
 
+	listener, err := net.Listen("tcp", "localhost:9003")
+	if err != nil {
+		log.Fatalf("error creating new tcp listener: %v", err)
+	}
+	log.Println("Listening on port 9003")
+
 	if err != nil {
 		log.Fatalf("erro ao setar nova conexão com o GORM: %s", err)
 	}
 
-	// cl := *config.ConnectionDynamo()
+	newRepoUser := repo.NewUser(conn)
+	newReposContact := repo.NewContact(conn)
+	newGrpc := grpc.NewServer()
 
-	// _ = dynamo.NewDynamoClient(cl)
-
-	_, err = config.CreateTables(cfg.DynamoDBConfig)
-	if err != nil {
-		fmt.Println("erro aqui")
-		log.Fatalf("error %v", err)
+	newServerUser := server.UserServer{
+		UserSvc:    newRepoUser,
+		ContactSvc: newReposContact,
 	}
 
-	/*log.Printf("retorno %s", res.DescribeTable)*/
+	pb.RegisterUserServiceServer(newGrpc, &newServerUser)
 
-	server.NewGRPC(conn.Begin())
-	log.Println("Listening on port 9003")
+	//_, err = config.CreateTables(cfg.DynamoDBConfig)
+	//if err != nil {
+	//	fmt.Println("erro aqui")
+	//	log.Fatalf("error %v", err)
+	//}
+
+	err = newGrpc.Serve(listener)
 }
