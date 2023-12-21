@@ -10,17 +10,17 @@ import (
 func main() {
 	cfg := *config.NewConfig()
 
-	// _, err := config.Connection(cfg.Type)
+	conn, err := config.Connection(cfg.Type)
 
-	// if err != nil {
-	// 	log.Fatalf("erro ao setar nova conexão com o GORM: %s", err)
-	// }
+	if err != nil {
+		log.Fatalf("erro ao setar nova conexão com o GORM: %s", err)
+	}
 
 	// cl := *config.ConnectionDynamo()
 
 	// _ = dynamo.NewDynamoClient(cl)
 
-	_, err := config.CreateTables(cfg.DynamoDBConfig)
+	_, err = config.CreateTables(cfg.DynamoDBConfig)
 	if err != nil {
 		fmt.Println("erro aqui")
 		log.Fatalf("error %v", err)
@@ -28,8 +28,6 @@ func main() {
 
 	/*log.Printf("retorno %s", res.DescribeTable)*/
 
-	server.NewGRPC()
+	server.NewGRPC(conn.Begin())
 	log.Println("Listening on port 9003")
-
-	log.Fatalln("terminou")
 }

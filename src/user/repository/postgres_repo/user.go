@@ -15,7 +15,7 @@ type userRepository struct {
 	gormConnection *gorm.DB
 }
 
-func (u userRepository) CreateUser(ctx context.Context, user *model.User) (*model.User, error) {
+func (u userRepository) CreateUser(_ context.Context, user *model.User) (*model.User, error) {
 	err := u.gormConnection.Create(user)
 	if err.Error != nil {
 		log.Fatalf("Error when creating new user: %v", err.Error)
@@ -26,9 +26,11 @@ func (u userRepository) CreateUser(ctx context.Context, user *model.User) (*mode
 	return user, nil
 }
 
-func (u userRepository) GetUserById(ctx context.Context, req *model.GetUserByIdRequest) (*model.User, error) {
+func (u userRepository) GetUserById(_ context.Context, req *model.GetUserByIdRequest) (*model.User, error) {
 	user := &model.User{}
-	condition := fmt.Sprintf("id=%v", req.ID)
+
+	id := fmt.Sprintf("\"%v\"", req.ID)
+	condition := fmt.Sprintf("\"id\"=%v", id)
 
 	result := u.gormConnection.First(model.User{}, condition)
 	if result.Error != nil {
@@ -54,7 +56,7 @@ func (u userRepository) GetUserById(ctx context.Context, req *model.GetUserByIdR
 	return user, nil
 }
 
-func (u userRepository) ListUsers(ctx context.Context, empty *empty.Empty) ([]*model.User, error) {
+func (u userRepository) ListUsers(_ context.Context, _ *empty.Empty) ([]*model.User, error) {
 	var users []*model.User
 
 	result := u.gormConnection.Find(&users)
@@ -66,7 +68,7 @@ func (u userRepository) ListUsers(ctx context.Context, empty *empty.Empty) ([]*m
 	return users, nil
 }
 
-func (u userRepository) UpdateUserById(ctx context.Context, newUser *model.User) (*model.User, error) {
+func (u userRepository) UpdateUserById(_ context.Context, newUser *model.User) (*model.User, error) {
 	err := u.gormConnection.Model(newUser).Where("id IN (?)", newUser.ID).Updates(newUser)
 	if err.Error != nil {
 		log.Fatalf("Error when updating user: %v", err.Error)
@@ -77,7 +79,7 @@ func (u userRepository) UpdateUserById(ctx context.Context, newUser *model.User)
 	return newUser, nil
 }
 
-func NewUser(db *gorm.DB) service.UserRepo {
+func NewUser(db *gorm.DB) service.UserService {
 	return &userRepository{
 		gormConnection: db,
 	}

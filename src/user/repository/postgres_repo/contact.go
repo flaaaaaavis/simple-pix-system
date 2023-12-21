@@ -15,6 +15,7 @@ type contactRepository struct {
 }
 
 func (c contactRepository) CreateContact(ctx context.Context, newContact *model.Contact) (*model.Contact, error) {
+	log.Println("entrou")
 	err := c.gormConnection.Create(newContact)
 	if err.Error != nil {
 		log.Fatalf("Error when creating new contact: %s", err.Error)
@@ -65,7 +66,7 @@ func (c contactRepository) UpdateContactById(ctx context.Context, newContact *mo
 	return newContact, nil
 }
 
-func NewContact(db *gorm.DB) service.ContactRepo {
+func NewContact(db *gorm.DB) service.ContactService {
 	return &contactRepository{
 		gormConnection: db,
 	}
