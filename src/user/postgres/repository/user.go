@@ -2,12 +2,11 @@ package repository
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"gorm.io/gorm"
 	"log"
-	"mentoria/src/user/model/postgres_model"
-	"mentoria/src/user/service"
+	"mentoria/src/user/postgres/model"
+	"mentoria/src/user/postgres/service"
 )
 
 type userRepository struct {
@@ -28,29 +27,12 @@ func (u userRepository) CreateUser(_ context.Context, user *model.User) (*model.
 func (u userRepository) GetUserById(_ context.Context, req *model.GetUserByIdRequest) (*model.User, error) {
 	user := &model.User{}
 
-	id := fmt.Sprintf("\"%v\"", req.ID)
-	condition := fmt.Sprintf("\"id\"=%v", id)
-
-	result := u.gormConnection.First(model.User{}, condition)
-	if result.Error != nil {
-		log.Fatalf("Error when getting user: %v", result.Error)
-
-		return nil, result.Error
+	id := fmt.Sprintf("%v", req.ID)
+	condition := &model.User{
+		ID: id,
 	}
 
-	rows, err := result.Rows()
-	if err != nil {
-		log.Fatalf("Error when getting user: %v", err.Error())
-
-		return nil, errors.New(err.Error())
-	}
-
-	err = result.ScanRows(rows, user)
-	if err != nil {
-		log.Fatalf("Error when getting user: %v", err.Error())
-
-		return nil, errors.New(err.Error())
-	}
+	u.gormConnection.First(user, condition)
 
 	return user, nil
 }

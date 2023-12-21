@@ -1,15 +1,15 @@
-package repo
+package repository
 
 import (
 	"database/sql"
-	model "mentoria/src/user/model/postgres_model"
-	"testing"
-
-	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"mentoria/src/user/postgres/model"
+	"testing"
+
+	"github.com/DATA-DOG/go-sqlmock"
 )
 
 func TestCreateContact(t *testing.T) {

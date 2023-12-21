@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"mentoria/src/user/model/postgres_model"
+	"mentoria/src/user/postgres/model"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"

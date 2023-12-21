@@ -1,4 +1,4 @@
-package dynamo_model
+package model
 
 type User struct {
 	ID         string `json:"id"`

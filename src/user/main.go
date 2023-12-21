@@ -6,7 +6,7 @@ import (
 	pb "mentoria/protobuf/user/v1"
 	"mentoria/server"
 	"mentoria/src/config"
-	"mentoria/src/user/repository/repo"
+	"mentoria/src/user/postgres/repository"
 	"net"
 )
 
@@ -25,8 +25,8 @@ func main() {
 		log.Fatalf("erro ao setar nova conexão com o GORM: %s", err)
 	}
 
-	newRepoUser := repo.NewUser(conn)
-	newReposContact := repo.NewContact(conn)
+	newRepoUser := repository.NewUser(conn)
+	newReposContact := repository.NewContact(conn)
 	newGrpc := grpc.NewServer()
 
 	newServerUser := server.UserServer{

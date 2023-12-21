@@ -1,16 +1,15 @@
-package dynamo_repo
+package repository
 
 import (
 	"context"
 	"fmt"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"log"
-	"mentoria/src/config"
-	model "mentoria/src/user/model/dynamo_model"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"log"
+	"mentoria/src/config"
+	"mentoria/src/user/dynamo/model"
 )
 
 type ClientDynamo struct {
