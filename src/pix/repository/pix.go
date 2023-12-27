@@ -66,7 +66,7 @@ func (p pixRepository) UpdatePixBalance(newPix *model.Pix) (*model.Pix, error) {
 	return newPix, nil
 }
 
-func NewPix(db *gorm.DB) service.PixRepo {
+func NewPix(db *gorm.DB) service.PixService {
 	return &pixRepository{
 		gormConnection: db,
 	}

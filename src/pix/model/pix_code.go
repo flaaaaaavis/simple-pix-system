@@ -1,7 +1,6 @@
 package model
 
 import (
-	"github.com/google/uuid"
 	pb "mentoria/protobuf/pix/v1"
 )
 
@@ -19,10 +18,10 @@ const (
 
 // PixCode model
 type PixCode struct {
-	ID    uuid.UUID `gorm:"primarykey;type:uuid;default:gen_random_uuid();column:id"`
-	PixID uuid.UUID `gorm:"type:uuid;column:pix_id"`
-	Type  PixType   `gorm:"type: varchar(255);column:type"`
-	Code  string    `gorm:"type: varchar(255);column:code"`
+	ID    string  `gorm:"primarykey;type:uuid;default:gen_random_uuid();column:id"`
+	PixID string  `gorm:"type:uuid;column:pix_id"`
+	Type  PixType `gorm:"type: varchar(255);column:type"`
+	Code  string  `gorm:"type: varchar(255);column:code"`
 }
 
 // FromPixCodeModelToProto converts PixCode from model to proto

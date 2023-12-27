@@ -37,7 +37,7 @@ func (t transactionRepository) ListUserTransactionsById(id string) ([]model.Tran
 	return transactions, nil
 }
 
-func NewTransaction(db *gorm.DB) service.TransactionRepo {
+func NewTransaction(db *gorm.DB) service.TransactionService {
 	return &transactionRepository{
 		gormConnection: db,
 	}

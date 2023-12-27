@@ -2,7 +2,9 @@ package repository
 
 import (
 	"errors"
+	"fmt"
 	"gorm.io/gorm"
+	"log"
 
 	"mentoria/src/pix/model"
 	"mentoria/src/pix/service"
@@ -25,7 +27,7 @@ func (b bankAccountRepository) CreateBankAccount(newBankAccount *model.BankAccou
 
 func (b bankAccountRepository) GetBankAccountById(id string) (*model.BankAccount, error) {
 	bankAccount := &model.BankAccount{}
-	condition := log.Println("id=%v", id)
+	condition := fmt.Sprintf("id=%v", id)
 
 	result := b.gormConnection.First(model.BankAccount{}, condition)
 	if result.Error != nil {
@@ -51,7 +53,7 @@ func (b bankAccountRepository) GetBankAccountById(id string) (*model.BankAccount
 	return bankAccount, nil
 }
 
-func NewBankAccount(db *gorm.DB) service.BankAccountRepo {
+func NewBankAccount(db *gorm.DB) service.BankAccountService {
 	return &bankAccountRepository{
 		gormConnection: db,
 	}

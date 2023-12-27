@@ -2,7 +2,9 @@ package repository
 
 import (
 	"errors"
+	"fmt"
 	"gorm.io/gorm"
+	"log"
 	"mentoria/src/pix/model"
 	"mentoria/src/pix/service"
 )
@@ -24,7 +26,7 @@ func (pc pixCodeRepository) CreatePixCode(newPixCode *model.PixCode) (*model.Pix
 
 func (pc pixCodeRepository) GetPixCodeByPixId(id string) (*model.PixCode, error) {
 	PixCode := &model.PixCode{}
-	condition := log.Println("pix_id=%v", id)
+	condition := fmt.Sprintf("pix_id=%v", id)
 
 	result := pc.gormConnection.First(model.PixCode{}, condition)
 	if result.Error != nil {
@@ -53,7 +55,7 @@ func (pc pixCodeRepository) GetPixCodeByPixId(id string) (*model.PixCode, error)
 func (pc pixCodeRepository) GetPixCodeByCode(code string) (*model.PixCode, error) {
 	PixCode := &model.PixCode{}
 
-	condition := log.Println("code=%v", code)
+	condition := fmt.Sprintf("code=%v", code)
 
 	result := pc.gormConnection.First(model.PixCode{}, condition)
 	if result.Error != nil {
@@ -92,7 +94,7 @@ func (pc pixCodeRepository) UpdatePixCode(newPixCode model.PixCode) (*model.PixC
 
 func (pc pixCodeRepository) DeletePixCode(code string) error {
 	PixCode := &model.PixCode{}
-	condition := log.Println("code=%v", code)
+	condition := fmt.Sprintf("code=%v", code)
 
 	err := pc.gormConnection.Where(condition).Delete(PixCode)
 	if err.Error != nil {
@@ -104,7 +106,7 @@ func (pc pixCodeRepository) DeletePixCode(code string) error {
 	return nil
 }
 
-func NewPixCode(db *gorm.DB) service.PixCodeRepo {
+func NewPixCode(db *gorm.DB) service.PixCodeService {
 	return &pixCodeRepository{
 		gormConnection: db,
 	}
