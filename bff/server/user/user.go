@@ -16,3 +16,9 @@ func (r *RouterImplementation) Routes() []router.Route {
 
 	return routes
 }
+
+func NewRouter(backend Backend) router.Router {
+	return &RouterImplementation{
+		backend: backend,
+	}
+}

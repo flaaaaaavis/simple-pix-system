@@ -180,3 +180,9 @@ func (g *grpc) UpdateContactById(ctx context.Context, newContact *types.UpdateCo
 		PhoneNumber: createdC.PhoneNumber,
 	}, nil
 }
+
+func NewGrpcBackend(user *pb.UserServiceClient) Backend {
+	return &grpc{
+		client: user,
+	}
+}
