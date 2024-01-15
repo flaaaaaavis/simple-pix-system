@@ -12,7 +12,12 @@ type RouterImplementation struct {
 
 func (r *RouterImplementation) Routes() []router.Route {
 	routes := make([]router.Route, 0)
-	routes = append(routes, router.NewPostRoute(r.CreateUser, "uau", reflect.TypeOf(types.CreateUserRequest{})))
+	routes = append(routes, router.NewPostRoute(r.CreateUser, "/create", reflect.TypeOf(types.CreateUserRequest{})))
 
 	return routes
+}
+
+func NewRouter(backend Backend) router.Router {
+	return &RouterImplementation{backend: backend}
+
 }
