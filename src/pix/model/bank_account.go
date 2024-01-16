@@ -16,7 +16,7 @@ type BankAccount struct {
 // FromBankAccountModelToProto converts BankAccount from model to proto
 func FromBankAccountModelToProto(bankAccount *BankAccount) *pb.BankAccount {
 	return &pb.BankAccount{
-		Id:            bankAccount.ID.String(),
+		Id:            bankAccount.ID,
 		BankCode:      bankAccount.BankCode,
 		BankName:      bankAccount.BankName,
 		BankBranch:    bankAccount.BankBranch,
