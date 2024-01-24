@@ -42,8 +42,8 @@ func FromPixCodeModelToProto(pixCode *PixCode) *pb.PixCode {
 	}
 
 	return &pb.PixCode{
-		Id:    pixCode.ID.String(),
-		PixId: pixCode.PixID.String(),
+		Id:    pixCode.ID,
+		PixId: pixCode.PixID,
 		Type:  pixType,
 		Code:  pixCode.Code,
 	}

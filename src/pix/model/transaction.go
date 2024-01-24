@@ -18,10 +18,10 @@ type Transaction struct {
 // FromTransactionModelToProto converts Transaction from model to proto
 func FromTransactionModelToProto(transaction *Transaction) *pb.Transaction {
 	return &pb.Transaction{
-		Id:         transaction.ID.String(),
+		Id:         transaction.ID,
 		Date:       transaction.Date.String(),
 		Amount:     transaction.Amount.String(),
-		SenderId:   transaction.SenderID.String(),
-		ReceiverId: transaction.ReceiverID.String(),
+		SenderId:   transaction.SenderID,
+		ReceiverId: transaction.ReceiverID,
 	}
 }

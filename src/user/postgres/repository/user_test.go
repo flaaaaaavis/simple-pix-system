@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -13,8 +14,8 @@ import (
 )
 
 func TestCreateUser(t *testing.T) {
-	mockUuid := uuid.New()
-	contactId := uuid.New()
+	mockUuid := uuid.New().String()
+	contactId := uuid.New().String()
 
 	cases := []struct {
 		name     string
@@ -73,8 +74,10 @@ func TestCreateUser(t *testing.T) {
 
 			d := NewUser(db)
 
+			ctx := context.Background()
+
 			tc.mockFunc(mockSql)
-			response, err := d.CreateUser(tc.req)
+			response, err := d.CreateUser(ctx, tc.req)
 
 			assert.Equal(t, tc.want, response)
 			assert.Equal(t, tc.wantErr, err)

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -13,7 +14,7 @@ import (
 )
 
 func TestCreateContact(t *testing.T) {
-	mockUuid := uuid.New()
+	mockUuid := uuid.New().String()
 
 	cases := []struct {
 		name     string
@@ -80,13 +81,15 @@ func TestCreateContact(t *testing.T) {
 				Conn:                 conn,
 			})
 
+			ctx := context.Background()
+
 			db, err := gorm.Open(postgresConfig, &gorm.Config{})
 			assert.NoError(t, err)
 
 			d := NewContact(db)
 
 			tc.mockFunc(mockSql)
-			response, err := d.CreateContact(tc.req)
+			response, err := d.CreateContact(ctx, tc.req)
 
 			assert.Equal(t, tc.want, response)
 			assert.Equal(t, tc.wantErr, err)
