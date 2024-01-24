@@ -17,7 +17,7 @@ func (r *RouterImplementation) Routes() []router.Route {
 	// user routes
 	routes = append(routes, router.NewPostRoute(r.CreateUser, "/create-user", reflect.TypeOf(types.CreateUserRequest{})))
 	routes = append(routes, router.NewGetRoute(r.GetUserById, "/get-user", reflect.TypeOf(types.GetUserByIdRequest{})))
-	routes = append(routes, router.NewGetRoute(r.ListUsers, "/list-users", reflect.TypeOf(empty.Empty{})))
+	routes = append(routes, router.NewGetRoute(r.ListUsers, "/list-users", reflect.TypeOf(nil)))
 	routes = append(routes, router.NewPostRoute(r.UpdateUserById, "/update-user", reflect.TypeOf(types.UpdateUserRequest{})))
 
 	// contact routes
